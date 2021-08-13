@@ -6,7 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
-  <link href="https://cdn.jsdelivr.net/npm/quasar@2.0.3/dist/quasar.prod.css" rel="stylesheet" type="text/css">
+  <!-- <link href="https://cdn.jsdelivr.net/npm/quasar@2.0.3/dist/quasar.prod.css" rel="stylesheet" type="text/css"> -->
+  <!-- <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons|Material+Icons+Outlined|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet" type="text/css"> -->
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@^5.0.0/css/materialdesignicons.min.css" rel="stylesheet" type="text/css">
+  <link href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.jsdelivr.net/npm/ionicons@^4.0.0/dist/css/ionicons.min.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.jsdelivr.net/npm/eva-icons@^1.0.0/style/eva-icons.css" rel="stylesheet" type="text/css">
+  <link href="https://themify.me/wp-content/themes/themify-v32/themify-icons/themify-icons.css" rel="stylesheet" type="text/css">
+  <link href="https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@^1.0.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.jsdelivr.net/npm/animate.css@^4.0.0/animate.min.css" rel="stylesheet" type="text/css">
+  <link href="https://cdn.jsdelivr.net/npm/quasar@2.0.3/dist/quasar.rtl.prod.css" rel="stylesheet" type="text/css">
+
 </head>
 <body>
  
@@ -114,13 +125,19 @@
 <script src="https://unpkg.com/vue@next"></script>
 <script src="https://cdn.jsdelivr.net/npm/quasar@2.0.3/dist/quasar.umd.prod.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/quasar@2.0.3/dist/quasar.umd.prod.js"></script> -->
 
-<script type="module">
-  // import { createApp, ref, reactive, onMounted, computed  } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.7/vue.esm-browser.min.js';
+<!-- <script type="module"> -->
+  <script type="module">
+  // import { createApp, ref, reactive, onMounted, computed, Quasar  } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.7/vue.esm-browser.min.js';
   const { createApp, ref, reactive, onMounted, computed  } = Vue;
+ 
+  // import { Quasar } from 'quasar';
 
-const app = {
+  const app = {
   setup () {
+      const { useQuasar } = Quasar;
       const todoList = reactive([]);
       const newTodo = ref('');
       var words = [];
@@ -129,6 +146,7 @@ const app = {
       const wordMeaning = ref('');
       const wordExample = ref('');
       const thisword =ref('');
+      const $q = useQuasar();
 
       onMounted(() => {
           axios.get('https://random-word-api.herokuapp.com/word?number=10')
@@ -222,12 +240,27 @@ const app = {
               };
           // 將已背好的單字，傳到pushData，並用JSON格式存在Localstorage
           const pushData = (strData) => { 
-                console.log("push:",strData);
-                history.value.push(strData);
-                console.log(history.value);
-                let objData = JSON.stringify(history.value);
-                localStorage.setItem('word', objData);
-                console.log(history);
+
+                $q.dialog({
+                  title: 'Confirm',
+                  message: 'Do you remember : '+strData+ '?',
+                  cancel: true,
+                  persistent: true
+                }).onOk(() => {
+                  console.log("push:",strData);
+                  history.value.push(strData);
+                  console.log(history.value);
+                  let objData = JSON.stringify(history.value);
+                  localStorage.setItem('word', objData);
+                  console.log(history);
+
+                }).onCancel(() => {
+                  $q.notify({
+                  message: '放棄 '+ strData+' 儲存',
+                  icon: 'gavel'
+                })
+
+                });
               };
           // 讀取 LocalStorage的曾經背過的單字
           const getRememberWord = () => { 
@@ -271,7 +304,7 @@ const app = {
     }
 
 const myapp = Vue.createApp(app);
-myapp.use(Quasar, { config: {} });
+myapp.use(Quasar, { config: {notify:{}} });
 myapp.mount('#q-app');
 
 </script>
