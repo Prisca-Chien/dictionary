@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons" rel="stylesheet" type="text/css">
+  <link href="https://cdn.jsdelivr.net/npm/quasar@2.0.3/dist/quasar.prod.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+ 
+
+<div id="q-app">
+  <div class="q-pa-md row items-start q-gutter-md">
+    <q-card class="my-card" flat bordered>
+      <q-card-section horizontal>
+        <q-card-section class="q-pt-xs">
+          <!-- <div class="text-overline">單字解釋</div> -->
+          <div class="text-h5 q-mt-sm q-mb-xs">已背單字，再看一次解釋</div>
+          <div class="text-body1 text-blue">
+          <q-card-section vertical  >
+            <q-item clickable v-ripple v-for="(word,index) in history" :key="index">
+              <q-item-section @click="historymeaning(word)" >
+                {{ word }}
+              </q-item-section>
+            </q-item>
+          </q-card-section>
+          </div>
+        </q-card-section>
+
+      </q-card-section>
+
+      <q-separator></q-separator>
+
+      <q-card-actions>
+        <q-btn flat round icon="event"></q-btn>
+        <q-btn flat>
+          10:30PM
+        </q-btn>
+        <q-btn flat color="primary">
+          Complete Today Task
+        </q-btn>
+      </q-card-actions>
+    </q-card>
+
+    <q-card class="my-card" flat bordered>
+      <q-item>
+        <q-item-section avatar>
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+          </q-avatar>
+        </q-item-section>
+
+        <q-item-section>
+          <q-item-label>USA DREAM</q-item-label>
+          <q-item-label caption>
+            For Anna
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+
+      <q-separator></q-separator>
+
+      <q-card-section class="text-body1" vertical  >
+        <q-item clickable v-ripple v-for="(word,index) in todoList" :key="index">
+        <q-item-section  class="text-black" @click="wordmeaning(index)">
+          {{ word.title }}
+        </q-item-section>
+        <q-item-section avatar>
+              <q-btn  label="換單字" flat round color="red" icon="favorite" @click="changeword(word.id)"></q-btn>
+            </q-item-section>
+            <q-item-section avatar>
+              <q-btn label="背完" flat round color="accent" icon="bookmark" @click="setRemeberWord(word.title,word.id)"></q-btn>
+        </q-item-section>
+      </q-item>
+      </q-card-section>
+
+    </q-card>
+
+    <q-card class="my-card">
+      <q-card-section horizontal>
+        <q-img
+          class="col-5 text-body1"
+          src="https://cdn.quasar.dev/img/parallax1.jpg"
+        ></q-img>
+        <q-item>
+          <q-item-section class="text-h6" >
+            {{ thisword }}
+          </q-item-section>
+        </q-item>  
+      </q-card-section>
+
+      <q-separator></q-separator>
+
+      <q-card-section class="text-body1" vertical  >
+        <q-card-actions vertical >
+          <!-- <q-item vertical> -->
+            <q-item-section class="text-purple">
+            Meaning: {{ wordMeaning }}
+            </q-item-section>
+            <q-separator></q-separator>
+            <q-item-section class="text-red">
+            Example: {{ wordExample }}
+          </q-item-section>
+        <!-- </q-item> -->
+       <!-- </q-card-section>  
+        <q-item>
+        <q-item-section>
+          {{ wordMeaning }}
+        </q-item-section>
+        <q-item-section>
+          {{ wordExample }}
+        </q-item-section> -->
+      <!-- </q-item> -->
+      </q-card-actions>
+      </q-card-section>
+
+    </q-card>
+
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@next"></script>
+<script src="https://cdn.jsdelivr.net/npm/quasar@2.0.3/dist/quasar.umd.prod.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+<script type="module">
+  // import { createApp, ref, reactive, onMounted, computed  } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.7/vue.esm-browser.min.js';
+  const { createApp, ref, reactive, onMounted, computed  } = Vue;
+
+const app = {
+  setup () {
+      const todoList = reactive([]);
+      const newTodo = ref('');
+      var words = [];
+      var i=0;
+      const history =ref([]);
+      const wordMeaning = ref('');
+      const wordExample = ref('');
+      const thisword =ref('');
+
+      onMounted(() => {
+          axios.get('https://random-word-api.herokuapp.com/word?number=10')
+          .then((response) => {
+              console.log("1:", response.data);
+              words=response.data;
+              console.log("2:", words);
+              for (i=0;i<10;i++) {
+              console.log(words[i]);    
+                  // 定義todoList的格式: id(唯一值), title(單字), Completed(背好沒) 
+                  todoList.push({
+                  id: Date.now()+i,
+                  title: words[i],
+                  completed: false,
+                  });
+              }
+          });
+            // 透過getRemeberWord，抓取存在localstorage的單字
+                console.log("list:",todoList);
+                getRememberWord();
+          });  // complete onMounted
+
+          const historymeaning = (sword) => {
+                console.log('meaning index: ', sword);
+                axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+sword )
+                .then((response) => {
+                  console.log('res:', response);
+                  if(response.request.readyState === 4 && response.status === 200){ //有load完才跑下面
+                    wordMeaning.value=response.data[0].meanings[0].definitions[0].definition;
+                    wordExample.value=response.data[0].meanings[0].definitions[0].example;
+                    thisword.value=sword;
+                    console.log(history);
+                  }else{ 
+                    console.log("error"); //萬一沒load完就跑下面顯示錯誤提示
+                  }
+                })
+                .catch( (error) => alert("此單字找不到解釋"));
+               };
+          
+
+          const wordmeaning = (sword) => {
+                console.log('meaning index: ', sword);
+                axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+todoList[sword].title )
+                .then((response) => {
+                  console.log('res:', response);
+                  if(response.request.readyState === 4 && response.status === 200){ //有load完才跑下面
+                    wordMeaning.value=response.data[0].meanings[0].definitions[0].definition;
+                    wordExample.value=response.data[0].meanings[0].definitions[0].example;
+                    thisword.value=todoList[sword].title;
+                    console.log(todoList);
+                  }else{ 
+                    console.log("error"); //萬一沒load完就跑下面顯示錯誤提示
+                  }
+                })
+                .catch( (error) => {
+                  wordMeaning.value="";
+                  wordExample.value="";
+                  thisword.value="此單字找不到解釋";
+                  // alert("此單字找不到解釋"));
+               });
+          }; 
+
+          // 若單字沒有查到說明，可以用這個功能置換新單字
+          const changeword = (cid) => {
+                var words=[];
+                const index = todoList.findIndex(checkid)
+                function checkid(wordlist) {
+                  return wordlist.id === cid; 
+                }
+                axios.get('https://random-word-api.herokuapp.com/word?number=1')
+                .then((response) => {
+                    console.log("changeword:",response);
+                    words=response.data;
+                    console.log("words:",words);
+                    console.log(index,words);
+                    todoList[index].title = words[0];
+                    });
+              
+                };
+
+          // 歷史值只保留10筆，超過則刪除第1筆
+
+          const setRemeberWord = (strData,cindex) => { 
+                console.log("length:",history.value.length);
+                if (history.value.length > 9) {
+                  console.log("splice");
+                history.value.splice(0, 1);
+                }
+                pushData(strData);
+                removeTodo(cindex);
+              };
+          // 將已背好的單字，傳到pushData，並用JSON格式存在Localstorage
+          const pushData = (strData) => { 
+                console.log("push:",strData);
+                history.value.push(strData);
+                console.log(history.value);
+                let objData = JSON.stringify(history.value);
+                localStorage.setItem('word', objData);
+                console.log(history);
+              };
+          // 讀取 LocalStorage的曾經背過的單字
+          const getRememberWord = () => { 
+                if (localStorage.getItem('word')) {
+                history.value = JSON.parse(localStorage.getItem('word'));
+                console.log("history:",history.value);
+                }
+              };
+
+          const removeTodo = (cid) => {
+            const index = todoList.findIndex(checkid)
+                function checkid(wordlist) {
+                  return wordlist.id === cid; 
+                }
+               console.log("remove:",index);
+                console.log(todoList[index].title);
+                // if (todoList[index].completed) { 
+                    // setRemeberWord(todoList[index].title);
+                // };
+                todoList.splice(index, 1);
+              };
+              
+
+            return {
+              todoList,
+              words,
+              history,
+              wordMeaning,
+              wordExample,
+              thisword,
+              lorem: 'It is sucessful.',
+              wordmeaning,
+              changeword,
+              setRemeberWord,
+              setRemeberWord,
+              getRememberWord,
+              pushData,
+              historymeaning,
+            }
+          }
+    }
+
+const myapp = Vue.createApp(app);
+myapp.use(Quasar, { config: {} });
+myapp.mount('#q-app');
+
+</script>
+
+<style type="text/css">
+
+.my-card {
+  width: 100%;
+  max-width: 350px
+}
+
+</style>
+
+</body>
+</html>
