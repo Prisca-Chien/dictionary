@@ -53,7 +53,7 @@
             </q-item-section>
             <q-item-section avatar>
               <q-btn label="背完" flat round color="accent" icon="bookmark" @click="setRemeberWord(word.title,word.id)"></q-btn>
-        </q-item-section>
+            </q-item-section>
       </q-item>
       </q-card-section>
 
@@ -65,9 +65,16 @@
           class="col-5 text-body1"
           src="https://cdn.quasar.dev/img/parallax1.jpg"
         ></q-img>
-        <q-item>
+        <q-item clickable class="block">
           <q-item-section class="text-h6" >
             {{ thisword }}
+          </q-item-section>
+          <q-item-section class="text-red"  @click="playSound(phoneticAudio)">
+            {{ phonetic }}
+          </q-item-section>
+          <!-- <q-item-section avatar> -->
+            <!-- <q-btn label="發音" flat round color="accent" icon="bookmark" @click="playSound(phoneticAudio)"></q-btn> -->
+            <!-- <q-btn label="發音" flat round color="accent" icon="bookmark" @click="playSound(phoneticAudio)"></q-btn> -->
           </q-item-section>
         </q-item>  
       </q-card-section>
@@ -145,7 +152,9 @@
       const history =ref([]);
       const wordMeaning = ref('');
       const wordExample = ref('');
-      const thisword =ref('');
+      const thisword = ref('');
+      const phonetic = ref('');
+      const phoneticAudio = ref('');
       const $q = useQuasar();
 
       onMounted(() => {
@@ -177,13 +186,20 @@
                   if(response.request.readyState === 4 && response.status === 200){ //有load完才跑下面
                     wordMeaning.value=response.data[0].meanings[0].definitions[0].definition;
                     wordExample.value=response.data[0].meanings[0].definitions[0].example;
+                    phonetic.value='['+response.data[0].phonetic+']';
+                    phoneticAudio.value="https:"+response.data[0].phonetics[0].audio;
                     thisword.value=sword;
                     console.log(history);
                   }else{ 
                     console.log("error"); //萬一沒load完就跑下面顯示錯誤提示
                   }
                 })
-                .catch( (error) => alert("此單字找不到解釋"));
+                .catch( (error) => {
+                  wordMeaning.value="";
+                  wordExample.value="";
+                  thisword.value="此單字找不到解釋";
+                  phonetic.value="";
+                });
                };
           
 
@@ -195,7 +211,9 @@
                   if(response.request.readyState === 4 && response.status === 200){ //有load完才跑下面
                     wordMeaning.value=response.data[0].meanings[0].definitions[0].definition;
                     wordExample.value=response.data[0].meanings[0].definitions[0].example;
+                    phonetic.value='['+response.data[0].phonetic+']';
                     thisword.value=todoList[sword].title;
+                    phoneticAudio.value="https:"+response.data[0].phonetics[0].audio;
                     console.log(todoList);
                   }else{ 
                     console.log("error"); //萬一沒load完就跑下面顯示錯誤提示
@@ -205,9 +223,17 @@
                   wordMeaning.value="";
                   wordExample.value="";
                   thisword.value="此單字找不到解釋";
+                  phonetic.value="";
                   // alert("此單字找不到解釋"));
                });
           }; 
+
+          const playSound = (sound) => {
+            if(sound) {
+              var audio = new Audio(sound);
+              audio.play();
+          };
+        };
 
           // 若單字沒有查到說明，可以用這個功能置換新單字
           const changeword = (cid) => {
@@ -291,7 +317,8 @@
               wordMeaning,
               wordExample,
               thisword,
-              lorem: 'It is sucessful.',
+              phonetic,
+              phoneticAudio,
               wordmeaning,
               changeword,
               setRemeberWord,
@@ -299,6 +326,7 @@
               getRememberWord,
               pushData,
               historymeaning,
+              playSound,
             }
           }
     }
