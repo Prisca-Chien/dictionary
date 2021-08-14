@@ -65,6 +65,7 @@
           class="col-5 text-body1"
           src="https://cdn.quasar.dev/img/parallax1.jpg"
         ></q-img>
+        <q-card-section vertical >
         <q-item clickable class="block">
           <q-item-section class="text-h6" >
             {{ thisword }}
@@ -72,11 +73,21 @@
           <q-item-section class="text-red"  @click="playSound(phoneticAudio)">
             {{ phonetic }}
           </q-item-section>
-          <!-- <q-item-section avatar> -->
-            <!-- <q-btn label="發音" flat round color="accent" icon="bookmark" @click="playSound(phoneticAudio)"></q-btn> -->
-            <!-- <q-btn label="發音" flat round color="accent" icon="bookmark" @click="playSound(phoneticAudio)"></q-btn> -->
+          <q-separator></q-separator>
+          <q-item-section avatar>
+            <q-btn  label="換解釋" flat round color="red" icon="email" @click="changeMeaning(currentNumber)">
+              <q-badge color="orange" floating>{{meaningNumber}}</q-badge>
+            </q-btn>
           </q-item-section>
-        </q-item>  
+        </q-item>
+        </q-card-section>
+        <!-- <q-card-section vertical>
+        <q-item clickable class="block">
+          <q-item-section avatar>
+            <q-btn  label="換解釋" flat round color="red" icon="favorite"></q-btn>
+          </q-item-section>
+        </q-item>
+        </q-card-section> -->
       </q-card-section>
 
       <q-separator></q-separator>
@@ -85,14 +96,39 @@
         <q-card-actions vertical >
           <!-- <q-item vertical> -->
             <q-item-section class="text-purple">
-            Meaning: {{ wordMeaning }}
+            Meaning {{partofSpeech}} : 
+            {{ wordMeaning }}
             </q-item-section>
             <q-separator></q-separator>
             <q-item-section class="text-red">
             Example: {{ wordExample }}
           </q-item-section>
-      </q-card-actions>
+        </q-card-actions>
       </q-card-section>
+
+      <q-separator></q-separator>
+
+      <q-card-section class="text-body1" vertical  >
+        <q-card-actions vertical >
+          <q-item clickable v-ripple  v-for="synonym in synonymList" :key="index">
+            <q-item-section @click="historymeaning(synonym)" >
+              {{synonym}}
+            </q-item-section>
+          </q-item>
+        </q-card-actions>
+      </q-card-section>
+
+      <q-separator></q-separator>
+
+      <q-card-section class="text-body1" vertical  >
+        <q-card-actions vertical >
+          <!-- <q-item vertical> -->
+            <q-item-section v-for="antonym in antonymList" class="text-blue">
+             {{antonym}} 
+            </q-item-section>
+        </q-card-actions>
+      </q-card-section>
+
     </q-card>
 
     <q-card class="my-card" flat bordered>
@@ -146,15 +182,27 @@
   setup () {
       const { useQuasar } = Quasar;
       const todoList = reactive([]);
+      const todoList1 = reactive([]);
       const newTodo = ref('');
       var words = [];
       var i=0;
+      var j=0;
+      var k=0;
+      var m=0;
+      var n=0;
       const history =ref([]);
+      const meaningList = reactive([]);
       const wordMeaning = ref('');
       const wordExample = ref('');
       const thisword = ref('');
       const phonetic = ref('');
       const phoneticAudio = ref('');
+      const meaningNumber = ref('');
+      const partofSpeech =ref('');
+      const currentNumber = ref(0);
+      const synonymList = ref([]);
+      const antonymList = ref([]);
+      // count thiscount = ref(0);
       const $q = useQuasar();
 
       onMounted(() => {
@@ -179,17 +227,64 @@
           });  // complete onMounted
 
           const historymeaning = (sword) => {
+                meaningList.length=0;
+                meaningNumber.value=0;
+                var isComplete= false;
                 console.log('meaning index: ', sword);
                 axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+sword )
                 .then((response) => {
-                  console.log('res:', response);
+                  console.log('H:res:', response);
                   if(response.request.readyState === 4 && response.status === 200){ //有load完才跑下面
+                    // check data.length
+                    var childArray=response.data;
+
+                    for (j=0;j<childArray.length;j++){ 
+                      for (k=0;k<childArray[j].meanings.length;k++){
+                          // console.log("jkm:",j,k,m,childArray[j].meanings[k].definitions[0].definition);
+                          // if (qcount++<11) break;
+                          meaningNumber.value+=childArray[j].meanings[k].definitions.length;
+                        };};
+                    j=0; k=0; m=0; n=0; //meaningList=[]; 
+                    while (!isComplete) {
+
+                      if (j<childArray.length) {
+
+                        if (k<childArray[j].meanings.length) {
+
+                          for (m=0;m<childArray[j].meanings[k].definitions.length;m++) {
+                            meaningList.push({
+                                  mId : n,
+                                  partofSpeech: childArray[j].meanings[k].partOfSpeech,
+                                  definition: childArray[j].meanings[k].definitions[m].definition,
+                                  example: childArray[j].meanings[k].definitions[m].example,
+                                  synonyms: childArray[j].meanings[k].definitions[m].synonyms,
+                                  antonyms: childArray[j].meanings[k].definitions[m].antonyms,
+                                  });
+                            console.log(meaningList);      
+                            n++;
+                              }; // end the third
+                              k++;
+                        } else // else of the second
+                        {
+                          j++;k=0;
+                        } // end of the second 
+                      } else // else of first
+                      {
+                      isComplete = true;
+                      } // end of the first
+                    } // end of while   
+                    console.log(meaningList);
                     wordMeaning.value=response.data[0].meanings[0].definitions[0].definition;
                     wordExample.value=response.data[0].meanings[0].definitions[0].example;
                     phonetic.value='['+response.data[0].phonetic+']';
                     phoneticAudio.value="https:"+response.data[0].phonetics[0].audio;
+                    // meaningNumber.value=response.data[0].meanings[0].definitions.length;
+                    partofSpeech.value='('+response.data[0].meanings[0].partOfSpeech+')';
+                    synonymList.value = response.data[0].meanings[0].definitions[0].synonyms;
+                    antonymList.value = response.data[0].meanings[0].definitions[0].antonyms;
+
                     thisword.value=sword;
-                    console.log(history);
+                    currentNumber.value=1;
                   }else{ 
                     console.log("error"); //萬一沒load完就跑下面顯示錯誤提示
                   }
@@ -202,19 +297,82 @@
                 });
                };
           
+            const changeMeaning = () => {
+
+                // meaningNumber.value=0;
+                currentNumber.value++;
+                console.log('meaning index: ',currentNumber.value);
+                  console.log(meaningList);
+                    if (currentNumber.value > meaningNumber.value) {
+                      currentNumber.value=1; }
+                      wordMeaning.value=meaningList[currentNumber.value-1].definition;
+                      wordExample.value=meaningList[currentNumber.value-1].example;
+                      partofSpeech.value='('+meaningList[currentNumber.value-1].partofSpeech+')';
+                      synonymList.value =meaningList[currentNumber.value-1].synonyms;
+                      antonymList.value =meaningList[currentNumber.value-1].antonyms;
+               };
+
 
           const wordmeaning = (sword) => {
-                console.log('meaning index: ', sword);
+                meaningList.length=0;
+                meaningNumber.value=0;
+                var isComplete= false;
+                console.log('Word meaning index: ', sword);
                 axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+todoList[sword].title )
                 .then((response) => {
                   console.log('res:', response);
                   if(response.request.readyState === 4 && response.status === 200){ //有load完才跑下面
+                    // check data.length
+                    var childArray=response.data;
+
+                    for (j=0;j<childArray.length;j++){ 
+                      for (k=0;k<childArray[j].meanings.length;k++){
+                          // console.log("jkm:",j,k,m,childArray[j].meanings[k].definitions[0].definition);
+                          // if (qcount++<11) break;
+                          meaningNumber.value+=childArray[j].meanings[k].definitions.length;
+                        };};
+                    j=0; k=0; m=0; n=0; //meaningList=[]; 
+                    while (!isComplete) {
+
+                      if (j<childArray.length) {
+
+                        if (k<childArray[j].meanings.length) {
+
+                          for (m=0;m<childArray[j].meanings[k].definitions.length;m++) {
+                            // console.log("jkm:",j,k,m,childArray[j].meanings[k].definitions[m].definition);
+                            meaningList.push({
+                                  mId : n,
+                                  partofSpeech: childArray[j].meanings[k].partOfSpeech,
+                                  definition: childArray[j].meanings[k].definitions[m].definition,
+                                  example: childArray[j].meanings[k].definitions[m].example,
+                                  synonyms: childArray[j].meanings[k].definitions[m].synonyms,
+                                  antonyms: childArray[j].meanings[k].definitions[m].antonyms,
+                                  });
+                            console.log(meaningList);      
+                            n++;
+                              }; // end the third
+                              k++;
+                        } else // else of the second
+                        {
+                          j++;k=0;
+                        } // end of the second 
+                      } else // else of first
+                      {
+                      isComplete = true;
+                      } // end of the first
+                    } // end of while   
+                    console.log(meaningList);
                     wordMeaning.value=response.data[0].meanings[0].definitions[0].definition;
                     wordExample.value=response.data[0].meanings[0].definitions[0].example;
                     phonetic.value='['+response.data[0].phonetic+']';
                     thisword.value=todoList[sword].title;
                     phoneticAudio.value="https:"+response.data[0].phonetics[0].audio;
-                    console.log(todoList);
+                    // meaningNumber.value=response.data[0].meanings[0].definitions.length;
+                    partofSpeech.value='('+response.data[0].meanings[0].partOfSpeech+')';
+                    synonymList.value = response.data[0].meanings[0].definitions[0].synonyms;
+                    
+                    currentNumber.value =1;
+                    console.log("此單字找到解釋");
                   }else{ 
                     console.log("error"); //萬一沒load完就跑下面顯示錯誤提示
                   }
@@ -224,9 +382,11 @@
                   wordExample.value="";
                   thisword.value="此單字找不到解釋";
                   phonetic.value="";
-                  // alert("此單字找不到解釋"));
+                  console.log("此單字找不到解釋");
                });
           }; 
+
+
 
           const playSound = (sound) => {
             if(sound) {
@@ -319,7 +479,13 @@
               thisword,
               phonetic,
               phoneticAudio,
+              meaningNumber,
+              currentNumber,
               wordmeaning,
+              meaningList,
+              partofSpeech,
+              synonymList,
+              antonymList,
               changeword,
               setRemeberWord,
               setRemeberWord,
@@ -327,6 +493,7 @@
               pushData,
               historymeaning,
               playSound,
+              changeMeaning,
             }
           }
     }
