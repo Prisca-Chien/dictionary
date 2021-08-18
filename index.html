@@ -527,6 +527,7 @@
             var tempHistory = JSON.parse(localStorage.getItem('word'));
             var d = new Date();
             var d_today = new Date();
+            var d_i = 0;
             rememberofYear.value=0;
             rememberofToday.value=0;
 
@@ -535,7 +536,11 @@
                   tempHistory.forEach(item => {
                     // change to a function.
                     d_today.setTime(Date.now());
+                    if (item.id ==='')
+                    item_id= Date.now() + d_i++;
+                    else 
                     d.setTime(item.id);
+                    
                     if ( datesAreOnSameDay(d,d_today) ) {
                       rememberofToday.value++;
                       showList.push({
