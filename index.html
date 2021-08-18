@@ -28,8 +28,8 @@
     <q-card class="my-card" flat bordered>
       <q-item>
         <q-item-section avatar>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/img/boy-avatar.png">
+          <q-avatar >
+            <img src="https://cdn.quasar.dev/img/boy-avatar.png" >
           </q-avatar>
         </q-item-section>
 
@@ -60,35 +60,37 @@
     </q-card>
 
     <q-card class="my-card">
-      <q-card-section horizontal>
+      <q-item>
         <q-img
           class="col-5 text-body1"
           src="https://cdn.quasar.dev/img/parallax1.jpg"
+          @click="historymeaning(lastword)"
         ></q-img>
-        <q-card-section vertical >
-        <q-item clickable class="block">
-          <q-item-section class="text-h6" >
+       <q-separator vertical class="q-mx-lg"></q-separator>       
+
+        <q-item-section>
+          <q-item-label class="flex text-blue text-body1" @click="changeMeaning(currentNumber)">
             {{ thisword }}
-          </q-item-section>
-          <q-item-section class="text-red"  @click="playSound(phoneticAudio)">
+            <div class=" q-gutter-0 " >
+                <q-btn flat  class="q-py-0" icon="swap_horiz" />
+                  <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
+                  <q-badge color="orange" floating>{{meaningNumber}}</q-badge>
+                </q-btn>
+            </div>
+          </q-item-label>
+          <q-item-label class="flex text-red text-body1" @click="playSound(phoneticAudio)">
             {{ phonetic }}
-          </q-item-section>
-          <q-separator></q-separator>
-          <q-item-section avatar>
-            <q-btn  label="換解釋" flat round color="red" icon="email" @click="changeMeaning(currentNumber)">
-              <q-badge color="orange" floating>{{meaningNumber}}</q-badge>
-            </q-btn>
-          </q-item-section>
-        </q-item>
-        </q-card-section>
-        <!-- <q-card-section vertical>
-        <q-item clickable class="block">
-          <q-item-section avatar>
-            <q-btn  label="換解釋" flat round color="red" icon="favorite"></q-btn>
-          </q-item-section>
-        </q-item>
-        </q-card-section> -->
-      </q-card-section>
+            <div class=" q-gutter-0 " >
+              <q-btn flat  class="q-py-0"/>
+                <q-icon name="volume_up" style="color: #9b9095; font-size: 1em"  />
+              </q-btn>
+            </div>
+          </q-item-label>
+        </q-item-section>
+      </q-item>
+      
+      <q-separator></q-separator>
+
 
       <q-separator></q-separator>
 
@@ -106,30 +108,34 @@
         </q-card-actions>
       </q-card-section>
 
-      <q-separator></q-separator>
+      <q-separator horizontal></q-separator>
+      <!-- <q-item v-ripple> -->
+      <q-item>
+        <q-item-section  class="flex-left " > Synonym
+            <q-separator ></q-separator>
 
-      <q-card-section class="text-body1" vertical  >
-        <q-card-actions vertical >
-          <q-item clickable v-ripple  v-for="synonym in synonymList" :key="index">
-            <q-item-section @click="historymeaning(synonym)" >
-              {{synonym}}
+          <q-item clickable v-for="synonym in synonymList" :key="index">
+              <q-item-label class="q-my-xs" @click="historymeaning(synonym)">
+                {{synonym}}  
+              </q-item-label>
+            </q-item>
+          </q-item-section>
+
+
+        <!-- </q-item> -->
+          <q-separator vertical class="q-mx-lg"></q-separator>
+
+          <!-- <q-item v-ripple > -->
+          <q-item-section  class="flex-left" > Antonym
+            <q-separator ></q-separator>
+            <q-item clickable v-for="antonym in antonymList" :key="index">
+              <q-item-label class="q-my-xs" @click="historymeaning(antonym)">
+                {{antonym}}  
+              </q-item-label>
+            </q-item>
             </q-item-section>
-          </q-item>
-        </q-card-actions>
-      </q-card-section>
-
-      <q-separator></q-separator>
-
-      <q-card-section class="text-body1" vertical  >
-        <q-card-actions vertical >
-          <!-- <q-item vertical> -->
-            <q-item-section v-for="antonym in antonymList" class="text-blue">
-             {{antonym}} 
-            </q-item-section>
-        </q-card-actions>
-      </q-card-section>
-
-    </q-card>
+        </q-item>
+      </q-card>
 
     <q-card class="my-card" flat bordered>
       <q-card-section horizontal>
@@ -138,9 +144,9 @@
           <div class="text-h5 q-mt-sm q-mb-xs">已背單字，再看一次解釋</div>
           <div class="text-body1 text-blue">
           <q-card-section vertical  >
-            <q-item clickable v-ripple v-for="(word,index) in history" :key="index">
-              <q-item-section @click="historymeaning(word)" >
-                {{ word }}
+            <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
+              <q-item-section @click="historymeaning(word.title)" >
+                {{word.year}}/{{word.month}}/{{word.day}}:{{ word.title }}
               </q-item-section>
             </q-item>
           </q-card-section>
@@ -152,14 +158,28 @@
       <q-separator></q-separator>
 
       <q-card-actions>
-        <q-btn flat round icon="event"></q-btn>
-        <q-btn flat>
-          10:30PM
-        </q-btn>
-        <q-btn flat color="primary">
-          Complete Today Task
-        </q-btn>
+        <q-btn push label="2021" flat  class="q-py-0" icon="date_range" />
+        <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
+          <q-badge color="orange" floating>{{rememberofYear}}</q-badge>
+        </q-btn>      
+        <q-btn flat  class="q-py-0" icon="today" />
+        <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
+          <q-badge color="orange" floating>{{rememberofToday}}</q-badge>
+        </q-btn>      
       </q-card-actions>
+      <q-separator></q-separator>
+
+      <q-card-actions vertical>
+        <q-item v-for="(item,index) in historyList" :key="index">
+          <q-btn push :label= numtoString(item.year,item.month,item.day) flat class="q-py-0" icon="date_range"/
+          @click="setShowlist(item.year,item.month,item.day)">
+          <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
+            <q-badge color="orange" floating>{{item.number}}</q-badge>
+          </q-btn>      
+        </q-item>  
+        </q-card-actions>
+
+
     </q-card>
 
   </div>
@@ -190,11 +210,15 @@
       var k=0;
       var m=0;
       var n=0;
-      const history =ref([]);
+      const history = reactive([]);
+      const historyList = reactive([]);
+      const showList = reactive([]);
       const meaningList = reactive([]);
+      const showDate = reactive([]);
       const wordMeaning = ref('');
       const wordExample = ref('');
       const thisword = ref('');
+      const lastword = ref('');
       const phonetic = ref('');
       const phoneticAudio = ref('');
       const meaningNumber = ref('');
@@ -202,6 +226,9 @@
       const currentNumber = ref(0);
       const synonymList = ref([]);
       const antonymList = ref([]);
+      const rememberofYear = ref(0);
+      const rememberofToday = ref(0);
+
       // count thiscount = ref(0);
       const $q = useQuasar();
 
@@ -224,9 +251,16 @@
             // 透過getRemeberWord，抓取存在localstorage的單字
                 console.log("list:",todoList);
                 getRememberWord();
-          });  // complete onMounted
+                history.forEach(function(obj) {
+                  checkhistory(obj);
+                });
+                console.log(historyList);
+
+              });  // complete onMounted
 
           const historymeaning = (sword) => {
+                synonymList.length=0;
+                antonymList.length=0;
                 meaningList.length=0;
                 meaningNumber.value=0;
                 var isComplete= false;
@@ -282,7 +316,7 @@
                     partofSpeech.value='('+response.data[0].meanings[0].partOfSpeech+')';
                     synonymList.value = response.data[0].meanings[0].definitions[0].synonyms;
                     antonymList.value = response.data[0].meanings[0].definitions[0].antonyms;
-
+                    lastword.value=thisword.value;
                     thisword.value=sword;
                     currentNumber.value=1;
                   }else{ 
@@ -294,12 +328,16 @@
                   wordExample.value="";
                   thisword.value="此單字找不到解釋";
                   phonetic.value="";
+                  synonymList.length=0;
+                  antonymList.length=0;
                 });
                };
           
             const changeMeaning = () => {
 
                 // meaningNumber.value=0;
+                synonymList.length=0;
+                antonymList.length=0;
                 currentNumber.value++;
                 console.log('meaning index: ',currentNumber.value);
                   console.log(meaningList);
@@ -316,6 +354,8 @@
           const wordmeaning = (sword) => {
                 meaningList.length=0;
                 meaningNumber.value=0;
+                synonymList.length=0;
+                antonymList.length=0;
                 var isComplete= false;
                 console.log('Word meaning index: ', sword);
                 axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+todoList[sword].title )
@@ -370,6 +410,7 @@
                     // meaningNumber.value=response.data[0].meanings[0].definitions.length;
                     partofSpeech.value='('+response.data[0].meanings[0].partOfSpeech+')';
                     synonymList.value = response.data[0].meanings[0].definitions[0].synonyms;
+                    antonymList.value = response.data[0].meanings[0].definitions[0].antonyms;
                     
                     currentNumber.value =1;
                     console.log("此單字找到解釋");
@@ -382,6 +423,8 @@
                   wordExample.value="";
                   thisword.value="此單字找不到解釋";
                   phonetic.value="";
+                  synonymList.length=0;
+                  antonymList.length=0;
                   console.log("此單字找不到解釋");
                });
           }; 
@@ -416,17 +459,18 @@
           // 歷史值只保留10筆，超過則刪除第1筆
 
           const setRemeberWord = (strData,cindex) => { 
-                console.log("length:",history.value.length);
-                if (history.value.length > 9) {
+                console.log("length:",history.length);
+                if (history.length > 99) {
                   console.log("splice");
-                history.value.splice(0, 1);
+                history.splice(0, 1);
                 }
                 pushData(strData);
                 removeTodo(cindex);
               };
           // 將已背好的單字，傳到pushData，並用JSON格式存在Localstorage
           const pushData = (strData) => { 
-
+            var d = new Date();
+            d.setTime(Date.now());
                 $q.dialog({
                   title: 'Confirm',
                   message: 'Do you remember : '+strData+ '?',
@@ -434,11 +478,41 @@
                   persistent: true
                 }).onOk(() => {
                   console.log("push:",strData);
-                  history.value.push(strData);
-                  console.log(history.value);
-                  let objData = JSON.stringify(history.value);
+                  rememberofYear.value++;
+                  rememberofToday.value++;
+                  history.push({
+                    id: Date.now(),
+                    title: strData,
+                    // year: d.getFullYear(), //計畫移除 8/18
+                    // month: d.getMonth(), //計畫移除 8/18
+                    // day: d.getDate(), //計畫移除 8/18
+                  });
+                  showList.push({
+                    title: strData,
+                    year: d.getFullYear(),
+                    month: d.getMonth(),
+                    day: d.getDate(),
+                  });
+                  var currentWord = [];
+                  currentWord.push({
+                    id: Date.now(),
+                    title: strData,
+                    year: d.getFullYear(),
+                    month: d.getMonth(),
+                    day: d.getDate(),
+                  });
+                  currentWord.forEach(function(obj) {
+                  checkhistory(obj);
+                });
+
+
+                  // history.title.push(strData);
+                  console.log(history[0].title);
+                  let objData = JSON.stringify(history);
+                  // let objData = JSON.stringify(todoList);
+                  console.log("obj:",objData);
                   localStorage.setItem('word', objData);
-                  console.log(history);
+                  console.log(history[0].id);
 
                 }).onCancel(() => {
                   $q.notify({
@@ -450,11 +524,75 @@
               };
           // 讀取 LocalStorage的曾經背過的單字
           const getRememberWord = () => { 
+            var tempHistory = JSON.parse(localStorage.getItem('word'));
+            var d = new Date();
+            var d_today = new Date();
+            rememberofYear.value=0;
+            rememberofToday.value=0;
+
+            console.log("localstorage:",JSON.parse(localStorage.getItem('word')));            
                 if (localStorage.getItem('word')) {
-                history.value = JSON.parse(localStorage.getItem('word'));
-                console.log("history:",history.value);
+                  tempHistory.forEach(item => {
+                    // change to a function.
+                    d_today.setTime(Date.now());
+                    d.setTime(item.id);
+                    if ( datesAreOnSameDay(d,d_today) ) {
+                      rememberofToday.value++;
+                      showList.push({
+                        id: item.id,
+                        title: item.title,
+                        year: d.getFullYear(),
+                        month: d.getMonth(),
+                        day: d.getDate(),
+                    });
+                    // console.log("Today:",rememberofToday);
+                    };
+                    rememberofYear.value++;
+                    history.push({
+                    id: item.id,
+                    title: item.title,
+                    // year: d.getFullYear(),
+                    // month: d.getMonth(),
+                    // day: d.getDate(),
+                  });
+                  });
+ 
+                  // history = JSON.parse(localStorage.getItem('word'));
+                console.log("history:",history);
                 }
               };
+
+            const setShowlist = (year,month,day) => { 
+            var d = new Date();
+            var d_showdate = new Date();
+            var showdateStr='';
+
+
+            showdateStr = numtoString(year,month+1,day);
+            console.log("showdateStr: ", showdateStr);
+            showList.length=0;
+            d_showdate.setTime(Date.parse(showdateStr));
+            console.log("d_showdateStr: ", d_showdate);
+            console.log("today: ",d.toDateString());  
+            rememberofToday.value=0;
+
+            history.forEach(item => {
+              // change to a function.
+              d.setTime(item.id);
+              console.log("d:",d,"d_showdate: ",d_showdate);
+              if ( datesAreOnSameDay(d,d_showdate) ) {
+                rememberofToday.value++;
+                showList.push({
+                  id: item.id,
+                  title: item.title,
+                  year: d.getFullYear(),
+                  month: d.getMonth(),
+                  day: d.getDate(),
+              });
+              // console.log("Today:",rememberofToday);
+              };
+            });
+            }  
 
           const removeTodo = (cid) => {
             const index = todoList.findIndex(checkid)
@@ -468,19 +606,78 @@
                 // };
                 todoList.splice(index, 1);
               };
-              
+              const datesAreOnSameDay = (first, second) =>
+                first.getFullYear() === second.getFullYear() &&
+                first.getMonth() === second.getMonth() &&
+                first.getDate() === second.getDate();              
+              // 改history不需要紀錄year,month,day
+              const checkhistory = (obj) => {
+                  let BreakException = {};
+                  var finditem=false;
+                  var addone=0;
+                  // console.log("obj:",obj);
+                  try {
+                  historyList.forEach(function(obj1,index){
+                      if (obj1.year==getyear(obj.id) && obj1.month==getmonth(obj.id) && obj1.day==getday(obj.id)){
+                      addone=obj1.number+1;
+                      obj1.number=addone;
+                      finditem=true;
+                      throw BreakException;  
+                      }
+                  });
+                  } catch (e) {
+                      if (e !== BreakException) throw e;
+                  }
+                  if (!finditem) {
+                    // console.log(getmonth(obj.id));
+                    // console.log(getday(obj.id));
+                      historyList.push({
+                      year: getyear(obj.id),
+                      month: getmonth(obj.id),
+                      day: getday(obj.id),
+                      number: 1,
+                      });
+                  } 
+              }
+              const numtoString = (year,month,day) => {
+                // console.log("numtoString:",year,month,day);
+                return year.toString()+'/'+month.toString()+'/'+day.toString()
+              }
+              const getyear =(dateid) => {
+                var tempdate= new Date();
+                tempdate.setTime(dateid);
+                // console.log("tempdate.getFullYear()",tempdate.getFullYear())
+                return tempdate.getFullYear()
+              }
+              const getmonth =(dateid) => {
+                var tempdate= new Date();
+                tempdate.setTime(dateid);
+                return tempdate.getMonth()
+              }
+              const getday =(dateid) => {
+                var tempdate= new Date();
+                tempdate.setTime(dateid);
+                return tempdate.getDate()
+              }
+
 
             return {
               todoList,
               words,
               history,
+              historyList,
+              showDate,
+              showList,
               wordMeaning,
               wordExample,
               thisword,
+              lastword,
               phonetic,
               phoneticAudio,
               meaningNumber,
               currentNumber,
+              rememberofToday,
+              rememberofYear,
               wordmeaning,
               meaningList,
               partofSpeech,
@@ -488,12 +685,15 @@
               antonymList,
               changeword,
               setRemeberWord,
-              setRemeberWord,
               getRememberWord,
               pushData,
               historymeaning,
               playSound,
               changeMeaning,
+              datesAreOnSameDay,
+              checkhistory,
+              numtoString,
+              setShowlist,
             }
           }
     }
