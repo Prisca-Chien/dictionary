@@ -141,7 +141,7 @@
       <q-card-section horizontal>
         <q-card-section class="q-pt-xs">
           <!-- <div class="text-overline">單字解釋</div> -->
-          <div class="text-h5 q-mt-sm q-mb-xs">已背單字，再看一次解釋</div>
+          <div class="text-h5 q-mt-sm q-mb-xs">2021/Aug/18</div>
           <div class="text-body1 text-blue">
           <q-card-section vertical  >
             <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
@@ -540,7 +540,7 @@
                     item_id= Date.now() + d_i++;
                     else 
                     d.setTime(item.id);
-                    
+
                     if ( datesAreOnSameDay(d,d_today) ) {
                       rememberofToday.value++;
                       showList.push({
