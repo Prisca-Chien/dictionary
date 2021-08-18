@@ -141,12 +141,12 @@
       <q-card-section horizontal>
         <q-card-section class="q-pt-xs">
           <!-- <div class="text-overline">單字解釋</div> -->
-          <div class="text-h5 q-mt-sm q-mb-xs">2021/Aug/18</div>
+          <div class="text-h5 q-mt-sm q-mb-xs">{{ showDate }}</div>
           <div class="text-body1 text-blue">
           <q-card-section vertical  >
             <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
               <q-item-section @click="historymeaning(word.title)" >
-                {{word.year}}/{{word.month}}/{{word.day}}:{{ word.title }}
+                {{ word.title }}
               </q-item-section>
             </q-item>
           </q-card-section>
@@ -171,7 +171,7 @@
 
       <q-card-actions vertical>
         <q-item v-for="(item,index) in historyList" :key="index">
-          <q-btn push :label= numtoString(item.year,item.month,item.day) flat class="q-py-0" icon="date_range"/
+          <q-btn push :label= numtoString(item.year,item.month+1,item.day) flat class="q-py-0" icon="date_range"/
           @click="setShowlist(item.year,item.month,item.day)">
           <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
             <q-badge color="orange" floating>{{item.number}}</q-badge>
@@ -214,7 +214,7 @@
       const historyList = reactive([]);
       const showList = reactive([]);
       const meaningList = reactive([]);
-      const showDate = reactive([]);
+      const showDate = ref('');
       const wordMeaning = ref('');
       const wordExample = ref('');
       const thisword = ref('');
@@ -233,6 +233,9 @@
       const $q = useQuasar();
 
       onMounted(() => {
+        var d= new Date();
+          showDate.value= numtoString(d.getFullYear(),d.getMonth()+1,d.getDate());
+
           axios.get('https://random-word-api.herokuapp.com/word?number=10')
           .then((response) => {
               console.log("1:", response.data);
