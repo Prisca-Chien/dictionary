@@ -250,11 +250,11 @@
           });
             // 透過getRemeberWord，抓取存在localstorage的單字
                 console.log("list:",todoList);
-                getRememberWord();
-                history.forEach(function(obj) {
-                  checkhistory(obj);
-                });
-                console.log(historyList);
+//                getRememberWord();
+                // history.forEach(function(obj) {
+                //   checkhistory(obj);
+                // });
+                // console.log(historyList);
 
               });  // complete onMounted
 
@@ -534,10 +534,9 @@
             console.log("localstorage:",JSON.parse(localStorage.getItem('word')));            
                 if (localStorage.getItem('word')) {
                   tempHistory.forEach(item => {
-                    // change to a function.
                     d_today.setTime(Date.now());
-                    if (item.id ==null)
-                    item_id= Date.now() + d_i++;
+                               // if (item.id ==null)
+                              // item_id= Date.now() + d_i++;
                     
                     d.setTime(item.id);
 
@@ -553,13 +552,13 @@
                     // console.log("Today:",rememberofToday);
                     };
                     rememberofYear.value++;
-                    history.push({
-                    id: item.id,
-                    title: item.title,
+                    // history.push({
+                    // id: item.id,
+                    // title: item.title,
                     // year: d.getFullYear(),
                     // month: d.getMonth(),
                     // day: d.getDate(),
-                  });
+                  // });
                   });
  
                   // history = JSON.parse(localStorage.getItem('word'));
