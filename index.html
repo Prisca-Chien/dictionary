@@ -49,7 +49,7 @@
           {{ word.title }}
         </q-item-section>
         <q-item-section avatar>
-              <q-btn  label="換單字" flat round color="red" icon="favorite" @click="changeword(word.id)"></q-btn>
+              <q-btn  label="換字" flat round color="red" icon="favorite" @click="changeword(word.id)"></q-btn>
             </q-item-section>
             <q-item-section avatar>
               <q-btn label="背完" flat round color="accent" icon="bookmark" @click="setRemeberWord(word.title,word.id)"></q-btn>
@@ -68,11 +68,13 @@
         ></q-img>
        <q-separator vertical class="q-mx-lg"></q-separator>       
 
-        <q-item-section>
-          <q-item-label class="flex text-blue text-body1" @click="changeMeaning(currentNumber)">
-            {{ thisword }}
+        <q-item-section >
+          <q-item-label  class="flex text-blue text-body1" @click="wordmeaning(index)" >
+             {{ thisword }}
+            <!-- <q-btn :label="thisword" class="flex text-blue text-body1" @click="wordmeaning(index)" >
+            </q-btn> -->
             <div class=" q-gutter-0 " >
-                <q-btn flat  class="q-py-0" icon="swap_horiz" />
+                <q-btn flat  class="q-py-0" icon="swap_horiz" @click="changeMeaning(currentNumber)" />
                   <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
                   <q-badge color="orange" floating>{{meaningNumber}}</q-badge>
                 </q-btn>
@@ -262,8 +264,8 @@
               });  // complete onMounted
 
           const historymeaning = (sword) => {
-                synonymList.length=0;
-                antonymList.length=0;
+                synonymList.value=[''];
+                antonymList.value=[''];
                 meaningList.length=0;
                 meaningNumber.value=0;
                 var isComplete= false;
@@ -327,20 +329,21 @@
                   }
                 })
                 .catch( (error) => {
+                  console.log(error);
                   wordMeaning.value="";
                   wordExample.value="";
-                  thisword.value="此單字找不到解釋";
+                  thisword.value=sword+" not found";
                   phonetic.value="";
-                  synonymList.length=0;
-                  antonymList.length=0;
+                  synonymList.value=[''];
+                  antonymList.value=[''];
                 });
                };
           
             const changeMeaning = () => {
 
                 // meaningNumber.value=0;
-                synonymList.length=0;
-                antonymList.length=0;
+                synonymList.value=[''];
+                antonymList.value=[''];
                 currentNumber.value++;
                 console.log('meaning index: ',currentNumber.value);
                   console.log(meaningList);
@@ -357,8 +360,8 @@
           const wordmeaning = (sword) => {
                 meaningList.length=0;
                 meaningNumber.value=0;
-                synonymList.length=0;
-                antonymList.length=0;
+                synonymList.value=[''];
+                antonymList.value=[''];
                 var isComplete= false;
                 console.log('Word meaning index: ', sword);
                 axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+todoList[sword].title )
@@ -424,10 +427,10 @@
                 .catch( (error) => {
                   wordMeaning.value="";
                   wordExample.value="";
-                  thisword.value="此單字找不到解釋";
+                  thisword.value=todoList[sword].title+" not found";
                   phonetic.value="";
-                  synonymList.length=0;
-                  antonymList.length=0;
+                  synonymList.value=[''];
+                  antonymList.value=[''];
                   console.log("此單字找不到解釋");
                });
           }; 
@@ -514,6 +517,7 @@
                   let objData = JSON.stringify(history);
                   // let objData = JSON.stringify(todoList);
                   console.log("obj:",objData);
+                  // store here, change to store by id
                   localStorage.setItem('newword', objData);
                   console.log(history[0].id);
 
@@ -616,7 +620,8 @@
               const datesAreOnSameDay = (first, second) =>
                 first.getFullYear() === second.getFullYear() &&
                 first.getMonth() === second.getMonth() &&
-                first.getDate() === second.getDate();              
+                first.getDate() === second.getDate();   
+
               // 改history不需要紀錄year,month,day
               const checkhistory = (obj) => {
                   let BreakException = {};
