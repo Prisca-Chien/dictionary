@@ -69,18 +69,19 @@
        <q-separator vertical class="q-mx-lg"></q-separator>       
 
         <q-item-section >
-          <q-item-label  class="flex text-blue text-body1" @click="wordmeaning(index)" >
-             {{ thisword }}
-            <!-- <q-btn :label="thisword" class="flex text-blue text-body1" @click="wordmeaning(index)" >
-            </q-btn> -->
+          <!-- <q-item-label  class="flex text-blue text-body1"  > -->
+          <q-item-label  class="flex text-blue text-body1"  >
+            <!-- {{ thisword }} -->
+            <q-btn :label="thisword" no-caps flat dense class=" text-blue text-body2" @click="setRemeberWord(thisword,thisId)" >
+            </q-btn>
             <div class=" q-gutter-0 " >
-                <q-btn flat  class="q-py-0" icon="swap_horiz" @click="changeMeaning(currentNumber)" />
+                <q-btn flat dense  class="q-py-0" icon="swap_horiz" @click="changeMeaning(currentNumber)" />
                   <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
                   <q-badge color="orange" floating>{{meaningNumber}}</q-badge>
                 </q-btn>
             </div>
           </q-item-label>
-          <q-item-label class="flex text-red text-body1" @click="playSound(phoneticAudio)">
+          <q-item-label class="flex dense text-red text-body1" @click="playSound(phoneticAudio)">
             {{ phonetic }}
             <div class=" q-gutter-0 " >
               <q-btn flat  class="q-py-0"/>
@@ -113,11 +114,12 @@
       <q-separator horizontal></q-separator>
       <!-- <q-item v-ripple> -->
       <q-item>
-        <q-item-section  class="flex-left " > Synonym
+        <q-item-section top class="flex-left " > Synonym
             <q-separator ></q-separator>
 
           <q-item clickable v-for="synonym in synonymList" :key="index">
-              <q-item-label class="q-my-xs" @click="historymeaning(synonym)">
+            <!-- <q-item-label class="q-my-xs" @click="historymeaning(synonym)"> -->
+              <q-item-label @click="historymeaning(synonym)">
                 {{synonym}}  
               </q-item-label>
             </q-item>
@@ -128,11 +130,13 @@
           <q-separator vertical class="q-mx-lg"></q-separator>
 
           <!-- <q-item v-ripple > -->
-          <q-item-section  class="flex-left" > Antonym
-            <q-separator ></q-separator>
+          <!-- <q-item-section  class="flex-left" > Antonym -->
+            <q-item-section top> Antonym
+              <q-separator ></q-separator>
             <q-item clickable v-for="antonym in antonymList" :key="index">
-              <q-item-label class="q-my-xs" @click="historymeaning(antonym)">
-                {{antonym}}  
+              <!-- <q-item-label class="q-my-xs" @click="historymeaning(antonym)"> -->
+                <q-item-label  @click="historymeaning(antonym)">
+                  {{antonym}}  
               </q-item-label>
             </q-item>
             </q-item-section>
@@ -220,6 +224,7 @@
       const wordMeaning = ref('');
       const wordExample = ref('');
       const thisword = ref('');
+      const thisId = ref(0);
       const lastword = ref('');
       const phonetic = ref('');
       const phoneticAudio = ref('');
@@ -261,7 +266,7 @@
                 });
                 console.log(historyList);
 
-              });  // complete onMounted
+      });  // complete onMounted
 
           const historymeaning = (sword) => {
                 synonymList.value=[''];
@@ -332,7 +337,7 @@
                   console.log(error);
                   wordMeaning.value="";
                   wordExample.value="";
-                  thisword.value=sword+" not found";
+                  thisword.value="["+sword+"] not found";
                   phonetic.value="";
                   synonymList.value=[''];
                   antonymList.value=[''];
@@ -355,7 +360,6 @@
                       synonymList.value =meaningList[currentNumber.value-1].synonyms;
                       antonymList.value =meaningList[currentNumber.value-1].antonyms;
                };
-
 
           const wordmeaning = (sword) => {
                 meaningList.length=0;
@@ -412,6 +416,8 @@
                     wordExample.value=response.data[0].meanings[0].definitions[0].example;
                     phonetic.value='['+response.data[0].phonetic+']';
                     thisword.value=todoList[sword].title;
+                    thisId.value= todoList[sword].id;
+                    console.log("code-5:",sword);
                     phoneticAudio.value="https:"+response.data[0].phonetics[0].audio;
                     // meaningNumber.value=response.data[0].meanings[0].definitions.length;
                     partofSpeech.value='('+response.data[0].meanings[0].partOfSpeech+')';
@@ -427,15 +433,13 @@
                 .catch( (error) => {
                   wordMeaning.value="";
                   wordExample.value="";
-                  thisword.value=todoList[sword].title+" not found";
+                  thisword.value="["+todoList[sword].title+"] not found";
                   phonetic.value="";
                   synonymList.value=[''];
                   antonymList.value=[''];
                   console.log("此單字找不到解釋");
                });
           }; 
-
-
 
           const playSound = (sound) => {
             if(sound) {
@@ -463,7 +467,6 @@
                 };
 
           // 歷史值只保留10筆，超過則刪除第1筆
-
           const setRemeberWord = (strData,cindex) => { 
                 console.log("length:",history.length);
                 if (history.length > 99) {
@@ -472,6 +475,7 @@
                 }
                 pushData(strData);
                 removeTodo(cindex);
+                console.log("code-01:",cindex);
               };
           // 將已背好的單字，傳到pushData，並用JSON格式存在Localstorage
           const pushData = (strData) => { 
@@ -607,14 +611,17 @@
 
           const removeTodo = (cid) => {
             const index = todoList.findIndex(checkid)
-                function checkid(wordlist) {
+            console.log("code-02:",cid);
+
+            function checkid(wordlist) {
                   return wordlist.id === cid; 
                 }
-               console.log("remove:",index);
-                console.log(todoList[index].title);
+               console.log("code-03:",index);
+                console.log("code-04:",todoList[index].title);
                 // if (todoList[index].completed) { 
                     // setRemeberWord(todoList[index].title);
                 // };
+                
                 todoList.splice(index, 1);
               };
               const datesAreOnSameDay = (first, second) =>
@@ -622,55 +629,55 @@
                 first.getMonth() === second.getMonth() &&
                 first.getDate() === second.getDate();   
 
-              // 改history不需要紀錄year,month,day
-              const checkhistory = (obj) => {
-                  let BreakException = {};
-                  var finditem=false;
-                  var addone=0;
-                  // console.log("obj:",obj);
-                  try {
-                  historyList.forEach(function(obj1,index){
-                      if (obj1.year==getyear(obj.id) && obj1.month==getmonth(obj.id) && obj1.day==getday(obj.id)){
-                      addone=obj1.number+1;
-                      obj1.number=addone;
-                      finditem=true;
-                      throw BreakException;  
-                      }
-                  });
-                  } catch (e) {
-                      if (e !== BreakException) throw e;
+          // 改history不需要紀錄year,month,day
+          const checkhistory = (obj) => {
+              let BreakException = {};
+              var finditem=false;
+              var addone=0;
+              // console.log("obj:",obj);
+              try {
+              historyList.forEach(function(obj1,index){
+                  if (obj1.year==getyear(obj.id) && obj1.month==getmonth(obj.id) && obj1.day==getday(obj.id)){
+                  addone=obj1.number+1;
+                  obj1.number=addone;
+                  finditem=true;
+                  throw BreakException;  
                   }
-                  if (!finditem) {
-                    // console.log(getmonth(obj.id));
-                    // console.log(getday(obj.id));
-                      historyList.push({
-                      year: getyear(obj.id),
-                      month: getmonth(obj.id),
-                      day: getday(obj.id),
-                      number: 1,
-                      });
-                  } 
+              });
+              } catch (e) {
+                  if (e !== BreakException) throw e;
               }
-              const numtoString = (year,month,day) => {
-                // console.log("numtoString:",year,month,day);
-                return year.toString()+'/'+month.toString()+'/'+day.toString()
-              }
-              const getyear =(dateid) => {
-                var tempdate= new Date();
-                tempdate.setTime(dateid);
-                // console.log("tempdate.getFullYear()",tempdate.getFullYear())
-                return tempdate.getFullYear()
-              }
-              const getmonth =(dateid) => {
-                var tempdate= new Date();
-                tempdate.setTime(dateid);
-                return tempdate.getMonth()
-              }
-              const getday =(dateid) => {
-                var tempdate= new Date();
-                tempdate.setTime(dateid);
-                return tempdate.getDate()
-              }
+              if (!finditem) {
+                // console.log(getmonth(obj.id));
+                // console.log(getday(obj.id));
+                  historyList.push({
+                  year: getyear(obj.id),
+                  month: getmonth(obj.id),
+                  day: getday(obj.id),
+                  number: 1,
+                  });
+              } 
+          }
+          const numtoString = (year,month,day) => {
+            // console.log("numtoString:",year,month,day);
+            return year.toString()+'/'+month.toString()+'/'+day.toString()
+          }
+          const getyear =(dateid) => {
+            var tempdate= new Date();
+            tempdate.setTime(dateid);
+            // console.log("tempdate.getFullYear()",tempdate.getFullYear())
+            return tempdate.getFullYear()
+          }
+          const getmonth =(dateid) => {
+            var tempdate= new Date();
+            tempdate.setTime(dateid);
+            return tempdate.getMonth()
+          }
+          const getday =(dateid) => {
+            var tempdate= new Date();
+            tempdate.setTime(dateid);
+            return tempdate.getDate()
+          }
 
 
             return {
@@ -683,6 +690,7 @@
               wordMeaning,
               wordExample,
               thisword,
+              thisId,
               lastword,
               phonetic,
               phoneticAudio,
