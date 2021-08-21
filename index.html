@@ -59,15 +59,15 @@ transition: unset;
 
       <q-card-section class="text-body1" vertical  >
         <q-item clickable v-ripple v-for="(word,index) in todoList" :key="index">
-        <q-item-section  class="text-black my-hover" @click="wordmeaning(index)">
+        <q-item-section  class="text-black" @click="wordmeaning(index)">
           {{ word.title }}
         </q-item-section>
         <q-item-section avatar>
-              <q-btn  label="換字" flat round color="red" icon="favorite" @click="changeword(word.id)"></q-btn>
+              <q-btn flat round color="red" icon="swap_horiz" @click="changeword(word.id)"></q-btn>
             </q-item-section>
-            <q-item-section avatar>
-              <q-btn label="背完" flat round color="accent" icon="bookmark" @click="setRemeberWord(word.title,word.id)"></q-btn>
-            </q-item-section>
+            <!-- <q-item-section avatar>
+              <q-btn label="背完" flat round color="accent" icon="verified_user" @click="setRemeberWord(word.title,word.id)"></q-btn>
+            </q-item-section> -->
       </q-item>
       </q-card-section>
 
@@ -141,7 +141,7 @@ transition: unset;
         <q-item-section top class="flex-left " > Synonym
             <q-separator ></q-separator>
 
-          <q-item calss="no-padding" clickable v-for="synonym in synonymList" :key="index">
+          <q-item  dense calss="dense " clickable v-for="synonym in synonymList" :key="index">
             <!-- <q-item-label class="q-my-xs" @click="historymeaning(synonym)"> -->
               <q-item-label @click="historymeaning(synonym)">
                 {{synonym}}  
@@ -157,7 +157,7 @@ transition: unset;
           <!-- <q-item-section  class="flex-left" > Antonym -->
             <q-item-section top> Antonym
               <q-separator ></q-separator>
-            <q-item calss="no-padding" clickable v-for="antonym in antonymList" :key="index">
+            <q-item dense calss="dense" clickable v-for="antonym in antonymList" :key="index">
               <!-- <q-item-label class="q-my-xs" @click="historymeaning(antonym)"> -->
                 <q-item-label @click="historymeaning(antonym)">
                   {{antonym}}  
@@ -493,6 +493,7 @@ transition: unset;
                     console.log("words:",words);
                     console.log(index,words);
                     todoList[index].title = words[0];
+                    wordmeaning(index);
                     });
               
                 };
@@ -730,7 +731,6 @@ transition: unset;
               currentNumber,
               rememberofToday,
               rememberofYear,
-              wordmeaning,
               meaningList,
               partofSpeech,
               synonymList,
