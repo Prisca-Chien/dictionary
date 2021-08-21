@@ -57,7 +57,7 @@ transition: unset;
 
       <q-separator></q-separator>
 
-      <q-card-section class="text-body1" vertical  >
+      <q-card-section class="text-h6" vertical  >
         <q-item clickable v-ripple v-for="(word,index) in todoList" :key="index">
         <q-item-section  class="text-black" @click="wordmeaning(index)">
           {{ word.title }}
@@ -86,16 +86,30 @@ transition: unset;
           <!-- <q-item-label  class="flex text-blue text-body1"  > -->
           <q-item-label  >
             <!-- {{ thisword }} -->
-            <q-btn :label="thisword" no-caps flat class="no-padding text-blue text-body1" @click="setRemeberWord(thisword,thisId)" >
-              <q-icon name="verified_user" v-if=showOr style="color: #9b9095; font-size: 1em"  />
-            </q-item-label>
+          <!-- <template v-if="storeOr"> -->
+            <div v-if=storeOr>
+            <q-btn  :label="thisword" no-caps flat class="no-padding text-blue text-body1" @click="setRemeberWord(thisword,thisId)">
+          <!-- </tempalte> -->
+          <!-- <template v-else> -->
+            <!-- <q-btn :label="thisword"  no-caps flat class="no-padding text-green text-body1" @click=""> -->
+            <!-- </q-btn>   -->
+          <!-- </template>   -->
+            <q-icon name="verified_user" v-if=showOr style="color: #9b9095; font-size: 1em"  />
+          </q-btn>
+          </div>  
+          <div v-else>
+            <q-btn :label="thisword"  no-caps flat class="no-pointer-events no-padding text-green text-body1" >
+            <q-icon name="verified_user" v-if=showOr style="color: #9b9095; font-size: 1em"  />
+            </q-btn>  
+          </div>
+        </q-item-label>
           <!-- <q-item-label dense class="flex dense text-red text-body1" @click="playSound(phoneticAudio)">
             {{ phonetic }} -->
             <q-item-label  >
               <q-btn :label="phonetic" no-caps flat class="no-padding text-red text-body1" @click="playSound(phoneticAudio)" >
               <q-icon name="volume_up"  v-if=showOr style="color: #9b9095; font-size: 1em"  />
-              </q-item-label>
-        </q-btn>
+              </q-btn>
+            </q-item-label>
         <!-- <div class=" q-gutter-0 " >
             <q-btn flat dense class="q-py-0" icon="swap_horiz" @click="changeMeaning(currentNumber)" /> -->
               <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
@@ -141,7 +155,7 @@ transition: unset;
         <q-item-section top class="flex-left " > Synonym
             <q-separator ></q-separator>
 
-          <q-item  dense calss="dense " clickable v-for="synonym in synonymList" :key="index">
+          <q-item  dense calss="dense  flex-center " style="padding: 10px 0 !important;" clickable v-for="synonym in synonymList" :key="index">
             <!-- <q-item-label class="q-my-xs" @click="historymeaning(synonym)"> -->
               <q-item-label @click="historymeaning(synonym)">
                 {{synonym}}  
@@ -260,6 +274,7 @@ transition: unset;
       const rememberofYear = ref(0);
       const rememberofToday = ref(0);
       const showOr = ref(false);
+      const storeOr = ref(true);
 
       // count thiscount = ref(0);
       const $q = useQuasar();
@@ -298,6 +313,8 @@ transition: unset;
                 antonymList.value=[''];
                 meaningList.length=0;
                 meaningNumber.value=0;
+                // showOr.value=false;
+                storeOr.value=false;
                 var isComplete= false;
                 console.log('meaning index: ', sword);
                 axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+sword )
@@ -392,6 +409,7 @@ transition: unset;
                 meaningList.length=0;
                 meaningNumber.value=0;
                 showOr.value=true;
+                storeOr.value=true;
                 synonymList.value=[''];
                 antonymList.value=[''];
                 var isComplete= false;
@@ -721,6 +739,7 @@ transition: unset;
               showDate,
               showList,
               wordMeaning,
+              wordmeaning,
               wordExample,
               thisword,
               thisId,
@@ -747,6 +766,7 @@ transition: unset;
               numtoString,
               setShowlist,
               showOr,
+              storeOr,
             }
           }
     }
