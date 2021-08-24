@@ -206,13 +206,113 @@ transition: unset;
         <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
           <q-badge color="orange" floating>{{rememberofYear}}</q-badge>
         </q-btn>      
-        <q-btn flat  class="q-py-0" icon="today" />
+        <q-btn  label="<" flat  class="q-py-0" @click="showPrevious()" >
+        </q-btn>  
+        <q-btn :label="showDate" flat  class="q-py-0" icon="today" />
         <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
+          <!-- <q-badge color="orange" floating>{{rememberofshow}}</q-badge> -->
           <q-badge color="orange" floating>{{rememberofToday}}</q-badge>
         </q-btn>      
+        <q-btn  label=">" flat  class="q-py-0" @click="showNext()">
+        </q-btn>  
+      </q-card-actions>
+      <q-separator></q-separator>
+      
+      <q-card-actions>
+    <div class="q-pa-md" center>  
+    
+      <q-carousel
+        animated
+        v-model="slide"
+        arrows
+        infinite
+        padding
+        height="75px"
+        control-color="primary"
+      >
+      <template v-for="(item,index) in historyList">
+      <q-carousel-slide  :name=numtoString(item.year,item.month+1,item.day)  class="column no-wrap flex-center">
+        <q-btn push :label=numtoString(item.year,item.month+1,item.day) 
+        @click="setShowlist(item.year,item.month,item.day)" flat  class="q-py-0" icon="date_range" />
+        <q-badge color="orange" floating>{{item.number}}</q-badge>
+      </q-carousel-slide>
+    </template>
+      <!-- <q-carousel-slide name="2021/8/19"  class="column no-wrap flex-center">
+        <q-btn push label="2021/8/19" flat  class="q-py-0" icon="date_range" />
+        <q-badge color="orange" floating>9</q-badge>
+      </q-carousel-slide>
+      <q-carousel-slide name="2021/8/20"  class="column no-wrap flex-center">
+        <q-btn push label="2021/8/20" flat  class="q-py-0" icon="date_range" />
+        <q-badge color="orange" floating>8</q-badge>
+      </q-carousel-slide> -->
+      <!-- <q-carousel-slide name="2021/8/21"  class="column no-wrap flex-center">
+        <q-btn push label="2021/8/21" flat  class="q-py-0" icon="date_range" />
+        <q-badge color="orange" floating>7</q-badge>
+      </q-carousel-slide> -->
+      </q-carousel>
+    </div>
+        <!-- TEST -->
+        <!-- <div class="q-pa-md" >
+          
+          <q-carousel
+            v-model="slide"
+            transition-prev="scale"
+            transition-next="scale"
+            swipeable
+            animated
+            control-color="white"
+            navigation =flase
+            padding
+            arrows
+            height="75px"
+            class="bg-primary text-white shadow-1 rounded-borders"
+          >
+            <template v-slot:navigation-icon="{ active, btnProps, onClick }">
+              <q-btn v-if="active" size="lg" icon="home" color="yellow" flat round dense @click="onClick"></q-btn>
+              <q-btn v-else size="sm" :icon="btnProps.icon" color="white" flat round dense @click="onClick"></q-btn>
+            </template>
+      
+            <q-carousel-slide v-for="(item,index) in historyList" :name="style" class="column no-wrap flex-center">
+              <q-icon :label="style" name="style" size="36px"></q-icon>
+              {{numtoString(item.year,item.month+1,item.day)}}
+            </q-carousel-slide>
+
+            <q-carousel-slide name="style" class="column no-wrap flex-center">
+              <q-icon :label="style" name="style" size="36px"></q-icon>
+              {{style}}
+            </q-carousel-slide>
+            <q-carousel-slide name="tv" class="column no-wrap flex-center">
+              <q-icon name="live_tv" size="36px"></q-icon>
+              {{tv}}
+            </q-carousel-slide>
+            <q-carousel-slide name="layers" class="column no-wrap flex-center">
+              <q-icon name="layers" size="36px"></q-icon>
+              {{layers}}
+            </q-carousel-slide>
+            <q-carousel-slide name="map" class="column no-wrap flex-center">
+              <q-icon name="terrain" size="36px"></q-icon>
+              {{map}}
+            </q-carousel-slide>
+        </q-carousel>
+        </div>
+  
+         <div class="row justify-center">
+          <q-btn-toggle
+            glossy
+            v-model="slide"
+            :options="[
+              { label: 1, value: 'style' },
+              { label: 2, value: 'tv' },
+              { label: 3, value: 'layers' },
+              { label: 4, value: 'map' }
+            ]"
+          ></q-btn-toggle>
+        </div> -->
+    
       </q-card-actions>
       <q-separator></q-separator>
 
+      
       <q-card-actions vertical>
         <q-item v-for="(item,index) in historyList" :key="index">
           <q-btn push :label= numtoString(item.year,item.month+1,item.day) flat class="q-py-0" icon="date_range"/
@@ -273,8 +373,17 @@ transition: unset;
       const antonymList = ref([]);
       const rememberofYear = ref(0);
       const rememberofToday = ref(0);
+      const rememberofMonth = ref(0);
+      const rememberofshow = ref(0);
       const showOr = ref(false);
       const storeOr = ref(true);
+
+      const slide= ref('2021/8/21');
+      const style= ref('1');
+      const tv= ref('2');
+      const layers= ref('3');
+      const map= ref('4');
+
 
       // count thiscount = ref(0);
       const $q = useQuasar();
@@ -540,6 +649,7 @@ transition: unset;
                   console.log("push:",strData);
                   rememberofYear.value++;
                   rememberofToday.value++;
+                  rememberofMonth.value++;
                   history.push({
                     id: Date.now(),
                     title: strData,
@@ -591,6 +701,7 @@ transition: unset;
             // var d_i = 0;
             rememberofYear.value=0;
             rememberofToday.value=0;
+            rememberofMonth.value=0;
 
             console.log("localstorage:",JSON.parse(localStorage.getItem('newword')));            
                 if (localStorage.getItem('newword')) {
@@ -600,6 +711,10 @@ transition: unset;
                               // item_id= Date.now() + d_i++;
                     
                     d.setTime(item.id);
+
+                    if (datesAreOnSameMonth(d,d_today)) {
+                      rememberofMonth.value++;
+                    }
 
                     if ( datesAreOnSameDay(d,d_today) ) {
                       rememberofToday.value++;
@@ -627,37 +742,49 @@ transition: unset;
                 }
               };
 
+            const showNext = () => {
+
+            }
+
+            const showPrevious = () => {
+
+            }
+
             const setShowlist = (year,month,day) => { 
-            var d = new Date();
-            var d_showdate = new Date();
-            var showdateStr='';
+              var d = new Date();
+              var d_showdate = new Date();
+              var showdateStr='';
 
 
-            showdateStr = numtoString(year,month+1,day);
-            showDate.value = showdateStr;
-            console.log("showdateStr: ", showdateStr);
-            showList.length=0;
-            d_showdate.setTime(Date.parse(showdateStr));
-            console.log("d_showdateStr: ", d_showdate);
-            console.log("today: ",d.toDateString());  
-            rememberofToday.value=0;
+              showdateStr = numtoString(year,month+1,day);
+              showDate.value = showdateStr;
+              console.log("showdateStr: ", showdateStr);
+              showList.length=0;
+              d_showdate.setTime(Date.parse(showdateStr));
+              console.log("d_showdateStr: ", d_showdate);
+              console.log("today: ",d.toDateString());  
+              rememberofToday.value=0;
+              rememberofMonth.value=0;
 
-            history.forEach(item => {
-              // change to a function.
-              d.setTime(item.id);
-              console.log("d:",d,"d_showdate: ",d_showdate);
-              if ( datesAreOnSameDay(d,d_showdate) ) {
-                rememberofToday.value++;
-                showList.push({
-                  id: item.id,
-                  title: item.title,
-                  year: d.getFullYear(),
-                  month: d.getMonth(),
-                  day: d.getDate(),
+              history.forEach(item => {
+                // change to a function.
+                d.setTime(item.id);
+                console.log("d:",d,"d_showdate: ",d_showdate);
+                if (datesAreOnSameMonth(d,d_showdate)) {
+                  rememberofMonth.value++;
+                }
+                if ( datesAreOnSameDay(d,d_showdate) ) {
+                  rememberofToday.value++;
+                  showList.push({
+                    id: item.id,
+                    title: item.title,
+                    year: d.getFullYear(),
+                    month: d.getMonth(),
+                    day: d.getDate(),
+                });
+                // console.log("Today:",rememberofToday);
+                };
               });
-              // console.log("Today:",rememberofToday);
-              };
-            });
             }  
 
           const removeTodo = (cid) => {
@@ -679,6 +806,11 @@ transition: unset;
                 first.getFullYear() === second.getFullYear() &&
                 first.getMonth() === second.getMonth() &&
                 first.getDate() === second.getDate();   
+
+                const datesAreOnSameMonth = (first, second) =>
+                first.getFullYear() === second.getFullYear() &&
+                first.getMonth() === second.getMonth();
+
 
           // 改history不需要紀錄year,month,day
           const checkhistory = (obj) => {
@@ -750,6 +882,8 @@ transition: unset;
               currentNumber,
               rememberofToday,
               rememberofYear,
+              rememberofMonth,
+              rememberofshow,
               meaningList,
               partofSpeech,
               synonymList,
@@ -762,11 +896,20 @@ transition: unset;
               playSound,
               changeMeaning,
               datesAreOnSameDay,
+              datesAreOnSameMonth,
               checkhistory,
               numtoString,
               setShowlist,
               showOr,
               storeOr,
+              showNext,
+              showPrevious,
+              slide,
+              style,
+              tv,
+              layers,
+              map,
+
             }
           }
     }
