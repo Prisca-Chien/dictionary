@@ -620,7 +620,9 @@ transition: unset;
             var n = d.getTime();          
                 $q.dialog({
                   title: 'Confirm',
-                  message: 'Do you remember : '+strData+ '?',
+                  message: 'Do you save : '+ d.getFullYear()+
+                    d.getMonth()+
+                    d.getDate()+ strData + '?',
                   cancel: true,
                   persistent: true
                 }).onOk(() => {
