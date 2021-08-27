@@ -327,8 +327,8 @@ transition: unset;
       const showList = reactive([]);
       const meaningList = reactive([]);
       const showDate = ref('');
-      const showYear = ref(2021);
-      const showMonth = ref(7);
+      const showYear = ref();
+      const showMonth = ref();
       const wordMeaning = ref('');
       const wordExample = ref('');
       const thisword = ref('');
@@ -359,7 +359,8 @@ transition: unset;
       onMounted(() => {
         var d= new Date();
           showDate.value= numtoString(d.getFullYear(),d.getMonth()+1,d.getDate());
-
+          showYear.value=d.getFullYear();
+          showMonth.value=d.getMonth(); 
           axios.get('https://random-word-api.herokuapp.com/word?number=10')
           .then((response) => {
               console.log("1:", response.data);
@@ -387,6 +388,8 @@ transition: unset;
                 monthList.forEach(function(obj){
                   checkYear(obj);
                 })
+
+                setYearlist(showYear.value);
                 console.log("M:",monthList);
                 console.log("Y:",yearList);
 
@@ -616,13 +619,11 @@ transition: unset;
             var d = new Date();
             d.setTime(Date.now());
             // 建立以前的單字資料
-            d.setFullYear(2020, 11, 9);
-            var n = d.getTime();          
+            // d.setFullYear(2020, 11, 9);
+            // var n = d.getTime();          
                 $q.dialog({
                   title: 'Confirm',
-                  message: 'Do you save : '+ d.getFullYear()+
-                    d.getMonth()+
-                    d.getDate()+ strData + '?',
+                  message: 'Do you save : '+ strData + '?',
                   cancel: true,
                   persistent: true
                 }).onOk(() => {
@@ -632,8 +633,8 @@ transition: unset;
                   rememberofMonth.value++;
                   history.push({
                     // 建立以前的單字
-                    id: n,
-                    // id: Date.now(),
+                    // id: n,
+                    id: Date.now(),
                     title: strData,
                   });
                   showList.push({
