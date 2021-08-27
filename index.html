@@ -224,7 +224,7 @@ transition: unset;
                 control-color="primary"
               >
               <template v-for="(item,index) in yearList">
-              <q-carousel-slide :name=numtoStringY(item.year) class="column no-wrap flex-center">
+              <q-carousel-slide :name=index class="column no-wrap flex-center">
                 <q-btn push :label=numtoStringY(item.year) 
                 @click="setYearlist(item.year)" flat icon="date_range" />
                 <q-badge color="orange" floating>{{item.number}}</q-badge>
@@ -350,7 +350,7 @@ transition: unset;
       const isFullscreen = ref(false);
 
       const slide1= ref(1);
-      const slide= ref('2021');
+      const slide= ref(1);
 
 
       // count thiscount = ref(0);
