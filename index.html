@@ -616,8 +616,8 @@ transition: unset;
             var d = new Date();
             d.setTime(Date.now());
             // 建立以前的單字資料
-            // d.setFullYear(2021, 6, 2);
-            // var n = d.getTime();          
+            d.setFullYear(2021, 6, 3);
+            var n = d.getTime();          
                 $q.dialog({
                   title: 'Confirm',
                   message: 'Do you remember : '+strData+ '?',
@@ -630,8 +630,8 @@ transition: unset;
                   rememberofMonth.value++;
                   history.push({
                     // 建立以前的單字
-                    // id: n,
-                    id: Date.now(),
+                    id: n,
+                    // id: Date.now(),
                     title: strData,
                   });
                   showList.push({
