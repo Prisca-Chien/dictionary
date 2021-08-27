@@ -202,127 +202,92 @@ transition: unset;
       <q-separator></q-separator>
 
       <q-card-actions>
-        <q-btn push label="2021" flat  class="q-py-0" icon="date_range" />
-        <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
+        
+        <!-- <q-btn push label="2021" flat  class="q-py-0" icon="date_range" />
           <q-badge color="orange" floating>{{rememberofYear}}</q-badge>
         </q-btn>      
-        <q-btn  label="<" flat  class="q-py-0" @click="showPrevious()" >
-        </q-btn>  
         <q-btn :label="showDate" flat  class="q-py-0" icon="today" />
-        <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
-          <!-- <q-badge color="orange" floating>{{rememberofshow}}</q-badge> -->
           <q-badge color="orange" floating>{{rememberofToday}}</q-badge>
-        </q-btn>      
-        <q-btn  label=">" flat  class="q-py-0" @click="showNext()">
-        </q-btn>  
+        </q-btn>       -->
+          <!-- <div class="row"  style="width:300px" > -->
+          <!-- <div class="col-9 col-md-8"> -->
+          <div class="q-pa-md">
+          <div>
+              <q-carousel
+                animated
+                v-model:fullscreen="isFullscreen"
+                v-model="slide"
+                arrows
+                infinite
+                padding
+                height="50px" 
+                control-color="primary"
+              >
+              <template v-for="(item,index) in yearList">
+              <q-carousel-slide :name=numtoStringY(item.year) class="column no-wrap flex-center">
+                <q-btn push :label=numtoStringY(item.year) 
+                @click="setYearlist(item.year)" flat icon="date_range" />
+                <q-badge color="orange" floating>{{item.number}}</q-badge>
+              </q-carousel-slide>
+              </template>
+              </q-carousel>
+          </div>
+        
+        </div>
+        
+
       </q-card-actions>
       <q-separator></q-separator>
-      
-      <q-card-actions>
-    <div class="q-pa-md" center>  
-    
+  <q-card-actions>
+
+  <div class="q-pa-md">
+  <div>
       <q-carousel
         animated
-        v-model="slide"
+        v-model:fullscreen="isFullscreen"
+        v-model="slide1"
         arrows
         infinite
         padding
-        height="75px"
+        height="50px" 
         control-color="primary"
       >
-      <template v-for="(item,index) in historyList">
-      <q-carousel-slide  :name=numtoString(item.year,item.month+1,item.day)  class="column no-wrap flex-center">
-        <q-btn push :label=numtoString(item.year,item.month+1,item.day) 
-        @click="setShowlist(item.year,item.month,item.day)" flat  class="q-py-0" icon="date_range" />
+
+      <!-- <t1 v-for="(item,index) in historyList" :key="index">
+        <q-item v-if="item.year==showYear && item.month==showMonth"> -->
+      <!-- <t2 v-if="item.year==showYear"> -->
+     
+      <template v-for="(item,index) in monthfilterList">
+        <q-carousel-slide :name=index  class="column no-wrap flex-center">
+        <q-btn push :label=numtoStringM(item.year,item.month+1)
+        @click="setMonthlist(item.year,item.month)" flat icon="date_range" />
         <q-badge color="orange" floating>{{item.number}}</q-badge>
-      </q-carousel-slide>
-    </template>
-      <!-- <q-carousel-slide name="2021/8/19"  class="column no-wrap flex-center">
-        <q-btn push label="2021/8/19" flat  class="q-py-0" icon="date_range" />
-        <q-badge color="orange" floating>9</q-badge>
-      </q-carousel-slide>
-      <q-carousel-slide name="2021/8/20"  class="column no-wrap flex-center">
-        <q-btn push label="2021/8/20" flat  class="q-py-0" icon="date_range" />
-        <q-badge color="orange" floating>8</q-badge>
-      </q-carousel-slide> -->
-      <!-- <q-carousel-slide name="2021/8/21"  class="column no-wrap flex-center">
+        </q-carousel-slide>
+      </template>
+        </q-carousel>
+  </div>
+
+</div>
+    <!-- <q-carousel-slide name="2021/8/21"  class="column no-wrap flex-center">
         <q-btn push label="2021/8/21" flat  class="q-py-0" icon="date_range" />
         <q-badge color="orange" floating>7</q-badge>
       </q-carousel-slide> -->
-      </q-carousel>
-    </div>
-        <!-- TEST -->
-        <!-- <div class="q-pa-md" >
-          
-          <q-carousel
-            v-model="slide"
-            transition-prev="scale"
-            transition-next="scale"
-            swipeable
-            animated
-            control-color="white"
-            navigation =flase
-            padding
-            arrows
-            height="75px"
-            class="bg-primary text-white shadow-1 rounded-borders"
-          >
-            <template v-slot:navigation-icon="{ active, btnProps, onClick }">
-              <q-btn v-if="active" size="lg" icon="home" color="yellow" flat round dense @click="onClick"></q-btn>
-              <q-btn v-else size="sm" :icon="btnProps.icon" color="white" flat round dense @click="onClick"></q-btn>
-            </template>
-      
-            <q-carousel-slide v-for="(item,index) in historyList" :name="style" class="column no-wrap flex-center">
-              <q-icon :label="style" name="style" size="36px"></q-icon>
-              {{numtoString(item.year,item.month+1,item.day)}}
-            </q-carousel-slide>
 
-            <q-carousel-slide name="style" class="column no-wrap flex-center">
-              <q-icon :label="style" name="style" size="36px"></q-icon>
-              {{style}}
-            </q-carousel-slide>
-            <q-carousel-slide name="tv" class="column no-wrap flex-center">
-              <q-icon name="live_tv" size="36px"></q-icon>
-              {{tv}}
-            </q-carousel-slide>
-            <q-carousel-slide name="layers" class="column no-wrap flex-center">
-              <q-icon name="layers" size="36px"></q-icon>
-              {{layers}}
-            </q-carousel-slide>
-            <q-carousel-slide name="map" class="column no-wrap flex-center">
-              <q-icon name="terrain" size="36px"></q-icon>
-              {{map}}
-            </q-carousel-slide>
-        </q-carousel>
-        </div>
-  
-         <div class="row justify-center">
-          <q-btn-toggle
-            glossy
-            v-model="slide"
-            :options="[
-              { label: 1, value: 'style' },
-              { label: 2, value: 'tv' },
-              { label: 3, value: 'layers' },
-              { label: 4, value: 'map' }
-            ]"
-          ></q-btn-toggle>
-        </div> -->
-    
-      </q-card-actions>
+   
+  </q-card-actions>
       <q-separator></q-separator>
-
       
       <q-card-actions vertical>
-        <q-item v-for="(item,index) in historyList" :key="index">
-          <q-btn push :label= numtoString(item.year,item.month+1,item.day) flat class="q-py-0" icon="date_range"/
-          @click="setShowlist(item.year,item.month,item.day)">
+        <t1 v-for="(item,index) in historyList" :key="index">
+          <q-item v-if="item.year==showYear && item.month==showMonth">
+              <q-btn  push :label= numtoString(item.year,item.month+1,item.day) flat class="q-py-0" icon="date_range"/
+              @click="setShowlist(item.year,item.month,item.day)">
           <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
-            <q-badge color="orange" floating>{{item.number}}</q-badge>
-          </q-btn>      
-        </q-item>  
-        </q-card-actions>
-
+              <q-badge color="orange" floating>{{item.number}}</q-badge>
+              </q-btn>
+          </q-item>  
+        </t1>      
+      </q-card-actions>
 
     </q-card>
 
@@ -356,9 +321,14 @@ transition: unset;
       var n=0;
       const history = reactive([]);
       const historyList = reactive([]);
+      const yearList = reactive([]);
+      const monthList = reactive([]);
+      const monthfilterList = reactive([]);
       const showList = reactive([]);
       const meaningList = reactive([]);
       const showDate = ref('');
+      const showYear = ref(2021);
+      const showMonth = ref(7);
       const wordMeaning = ref('');
       const wordExample = ref('');
       const thisword = ref('');
@@ -377,12 +347,10 @@ transition: unset;
       const rememberofshow = ref(0);
       const showOr = ref(false);
       const storeOr = ref(true);
+      const isFullscreen = ref(false);
 
-      const slide= ref('2021/8/21');
-      const style= ref('1');
-      const tv= ref('2');
-      const layers= ref('3');
-      const map= ref('4');
+      const slide1= ref(1);
+      const slide= ref('2021');
 
 
       // count thiscount = ref(0);
@@ -413,7 +381,14 @@ transition: unset;
                 history.forEach(function(obj) {
                   checkhistory(obj);
                 });
-                console.log(historyList);
+                historyList.forEach(function(obj){
+                  checkMonth(obj);
+                })
+                monthList.forEach(function(obj){
+                  checkYear(obj);
+                })
+                console.log("M:",monthList);
+                console.log("Y:",yearList);
 
       });  // complete onMounted
 
@@ -640,6 +615,9 @@ transition: unset;
           const pushData = (strData) => { 
             var d = new Date();
             d.setTime(Date.now());
+            // 建立以前的單字資料
+            // d.setFullYear(2021, 6, 2);
+            // var n = d.getTime();          
                 $q.dialog({
                   title: 'Confirm',
                   message: 'Do you remember : '+strData+ '?',
@@ -651,11 +629,10 @@ transition: unset;
                   rememberofToday.value++;
                   rememberofMonth.value++;
                   history.push({
+                    // 建立以前的單字
+                    // id: n,
                     id: Date.now(),
                     title: strData,
-                    // year: d.getFullYear(), //計畫移除 8/18
-                    // month: d.getMonth(), //計畫移除 8/18
-                    // day: d.getDate(), //計畫移除 8/18
                   });
                   showList.push({
                     title: strData,
@@ -742,13 +719,25 @@ transition: unset;
                 }
               };
 
-            const showNext = () => {
+            const setMonthlist =(year,month) => {
+              showMonth.value=month;
+              showYear.value=year;   
+              console.log("showmonth:",showMonth.value);           
+            }  
 
-            }
-
-            const showPrevious = () => {
-
-            }
+            const setYearlist =(year) => {
+              showYear.value=year;
+              monthfilterList.length=0;
+              monthList.forEach(obj => {
+                if (obj.year==year) 
+                monthfilterList.push({
+                  year: obj.year,
+                  month: obj.month,
+                  number: obj.number,
+                 });
+              console.log("showyear:",showYear.value);           
+            })
+          }  
 
             const setShowlist = (year,month,day) => { 
               var d = new Date();
@@ -841,6 +830,75 @@ transition: unset;
                   });
               } 
           }
+
+          const checkMonth = (obj) => {
+              let BreakException = {};
+              var finditem=false;
+              var addnumber=0;
+              // console.log("obj:",obj);
+              try {
+              monthList.forEach(function(obj1,index){
+                  if (obj1.year==obj.year && obj1.month==obj.month){
+                  addnumber=obj.number;
+                  obj1.number=obj1.number+addnumber;
+                  finditem=true;
+                  throw BreakException;  
+                  }
+              });
+              } catch (e) {
+                  if (e !== BreakException) throw e;
+              }
+              if (!finditem) {
+                // console.log(getmonth(obj.id));
+                // console.log(getday(obj.id));
+                  monthList.push({
+                  year: obj.year,
+                  month: obj.month,
+                  number: obj.number,
+                  });
+              } 
+          }
+
+          const checkYear = (obj) => {
+              let BreakException = {};
+              var finditem=false;
+              var addnumber=0;
+              // console.log("obj:",obj);
+              try {
+              yearList.forEach(function(obj1,index){
+                  if (obj1.year==obj.year){
+                  addnumber=obj.number;
+                  obj1.number=obj1.number+addnumber;
+                  finditem=true;
+                  throw BreakException;  
+                  }
+              });
+              } catch (e) {
+                  if (e !== BreakException) throw e;
+              }
+              if (!finditem) {
+                // console.log(getmonth(obj.id));
+                // console.log(getday(obj.id));
+                  yearList.push({
+                  year: obj.year,
+                  number: obj.number,
+                  });
+              } 
+          }
+
+          const numtoStringY = (year) => {
+            // console.log("numtoString:",year,month,day);
+            console.log("Y:",year.toString());
+            return year.toString();
+            
+          }
+
+          const numtoStringM = (year,month) => {
+            console.log("numtoStringM:",year,month);
+            // slide1.value=year.toString()+'/'+month.toString()
+            return year.toString()+'/'+month.toString()
+          }
+
           const numtoString = (year,month,day) => {
             // console.log("numtoString:",year,month,day);
             return year.toString()+'/'+month.toString()+'/'+day.toString()
@@ -868,6 +926,11 @@ transition: unset;
               words,
               history,
               historyList,
+              monthList,
+              monthfilterList,
+              yearList,
+              showMonth,
+              showYear,
               showDate,
               showList,
               wordMeaning,
@@ -898,18 +961,19 @@ transition: unset;
               datesAreOnSameDay,
               datesAreOnSameMonth,
               checkhistory,
+              checkMonth,
+              checkYear,
               numtoString,
+              numtoStringM,
+              numtoStringY,
               setShowlist,
+              setMonthlist,
+              setYearlist,
               showOr,
               storeOr,
-              showNext,
-              showPrevious,
               slide,
-              style,
-              tv,
-              layers,
-              map,
-
+              slide1,
+              isFullscreen,
             }
           }
     }
