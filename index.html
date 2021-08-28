@@ -44,8 +44,8 @@ opacity: .5!important;
 <body>
  
 
-<div id="q-app">
-  <div class="q-pa-md row items-start q-gutter-md">
+<div id="q-app" class="q-pa-md row items-start q-gutter-md">
+
 
     <q-card class="my-card" flat bordered>
       <q-item>
@@ -84,71 +84,43 @@ opacity: .5!important;
     <q-card class="my-card">
       <q-item>
         <q-img
-          class="col-5 text-body1"
+          class="col-5 text-h6"
           src="https://cdn.quasar.dev/img/parallax1.jpg"
           @click="historymeaning(lastword)"
         ></q-img>
        <q-separator vertical class="q-mx-lg"></q-separator>       
 
         <q-item-section >
-          <!-- <q-item-label  class="flex text-blue text-body1"  > -->
           <q-item-label  >
-          <!-- <template v-if="storeOr"> -->
             <div v-if=storeOr>
-            <q-btn  :label="thisword" no-caps flat class="no-padding text-blue text-body1" @click="setRemeberWord(thisword,thisId)">
-          <!-- </tempalte> -->
-          <!-- <template v-else> -->
-            <!-- <q-btn :label="thisword"  no-caps flat class="no-padding text-green text-body1" @click=""> -->
-            <!-- </q-btn>   -->
-          <!-- </template>   -->
+            <q-btn  :label="thisword" no-caps flat class="no-padding text-blue text-h6" @click="setRemeberWord(thisword,thisId)">
             <q-icon name="verified_user" v-if=showOr style="color: #9b9095; font-size: 1em"  />
           </q-btn>
           </div>  
           <div v-else>
-            <q-btn :label="thisword"  no-caps flat class="no-pointer-events no-padding text-green text-body1" >
+            <q-btn :label="thisword"  no-caps flat class="no-pointer-events no-padding text-green text-h6" >
             <q-icon name="verified_user" v-if=showOr style="color: #9b9095; font-size: 1em"  />
             </q-btn>  
           </div>
         </q-item-label>
-          <!-- <q-item-label dense class="flex dense text-red text-body1" @click="playSound(phoneticAudio)">
-            {{ phonetic }} -->
             <q-item-label  >
-              <q-btn :label="phonetic" no-caps flat class="no-padding text-red text-body1" @click="playSound(phoneticAudio)" >
+              <q-btn :label="phonetic" no-caps flat class="no-padding text-red text-h6" @click="playSound(phoneticAudio)" >
               <q-icon name="volume_up"  v-if=showOr style="color: #9b9095; font-size: 1em"  />
               </q-btn>
             </q-item-label>
-        <!-- <div class=" q-gutter-0 " >
-            <q-btn flat dense class="q-py-0" icon="swap_horiz" @click="changeMeaning(currentNumber)" /> -->
-              <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
-              <!-- <q-badge color="orange" floating>{{meaningNumber}}</q-badge>
-            </q-btn>
-            <q-btn flat  class="q-py-0"/>
-            <q-icon name="volume_up" style="color: #9b9095; font-size: 1em"  />
-          </q-btn>
-        </div> -->
         </q-item-section>
       </q-item>
       
       <q-separator></q-separator>
 
-
-      <q-separator></q-separator>
-
-      <q-card-section class="text-body1" vertical  >
+      <q-card-section class="text-h6" vertical  >
         <q-card-actions vertical >
-          <!-- <q-item vertical> -->
             <div class=" q-gutter-0 text-purple" >
-              <q-btn label="Meaning:" no-caps flat class="no-padding text-purple q-py-0 text-body1" @click="changeMeaning(currentNumber)" />
-              <!-- no-padding -->
-              <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
+              <q-btn label="Meaning:" no-caps flat class="no-padding text-purple q-py-0 text-h6" @click="changeMeaning(currentNumber)" />
               <q-badge  v-if=showOr color="orange" floating hidden>{{meaningNumber}}</q-badge>
             </q-btn >
             {{partofSpeech}} {{ wordMeaning }} 
             </div>
-            <!-- <q-item-section class="text-purple">
-              Meaning {{partofSpeech}} : 
-            {{ wordMeaning }}
-            </q-item-section> -->
             <q-separator></q-separator>
             <q-item-section class="text-red">
             Example: {{ wordExample }}
@@ -157,87 +129,49 @@ opacity: .5!important;
       </q-card-section>
 
       <q-separator horizontal></q-separator>
-      <!-- <q-item v-ripple> -->
       <q-item>
         <q-item-section top class="flex-left " > Synonym
             <q-separator ></q-separator>
 
-          <q-item  dense calss="dense"  clickable v-for="synonym in synonymList" :key="index">
-            <!-- <q-item-label class="q-my-xs" @click="historymeaning(synonym)"> -->
+          <q-item  dense calss="dense"  clickable v-for="(synonym,index) in synonymList" :key="index">
               <q-item-label @click="historymeaning(synonym)">
                 {{synonym}}  
               </q-item-label>
             </q-item>
           </q-item-section>
 
-
-        <!-- </q-item> -->
           <q-separator vertical class="q-mx-lg"></q-separator>
 
-          <!-- <q-item v-ripple > -->
-          <!-- <q-item-section  class="flex-left" > Antonym -->
             <q-item-section top> Antonym
               <q-separator ></q-separator>
-            <q-item dense calss="dense" clickable v-for="antonym in antonymList" :key="index">
-              <!-- <q-item-label class="q-my-xs" @click="historymeaning(antonym)"> -->
+            <q-item dense calss="dense" clickable v-for="(antonym,index) in antonymList" :key="index">
                 <q-item-label @click="historymeaning(antonym)">
                   {{antonym}}  
               </q-item-label>
             </q-item>
             </q-item-section>
         </q-item>
-      </q-card>
+    </q-card>
 
-      <div class="my-card" :style="{display:isDisplay}">
-    <q-card  flat bordered >
-        <q-card-section class="text-h6" vertical >
-          <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
-            <q-item-section @click="gameMatch(word.title)" >
-              {{ word.title }}
-            </q-item-section>
-          </q-item>
-          <q-separator></q-separator>
-          <q-item>
-            <q-label>
-              {{random_item()}}
-            </q-label>
-          </q-item>
-          <q-separator></q-separator>
-            <q-btn flat round color="green" icon="exit_to_app" @click="gameOver()"></q-btn>
-            <q-btn flat round color="green" icon="quiz" @click="setGame()"></q-btn>
-            <q-btn flat round color="green" icon="question_answer" @click="answerQuiz()"></q-btn>
-        </q-card-section>   
-      </q-card>
-    </div>
 
-    <q-card class="my-card" flat bordered>
-      <q-card-section horizontal>
-       <q-card-section class="q-pt-xs">
-          <!-- <div class="text-overline">單字解釋</div> -->
-        <div class="text-h5 q-mt-sm q-mb-xs">
-          <q-btn push :label=showDate flat  class="q-py-0" icon="date_range"
-            @click="setGame()">
+  <div class="my-card" flat bordered >
+    <q-card >
+      <q-card-section  class="text-h5">
+          <q-btn push :label=showDate flat  class="q-py-0" icon="date_range" @click="setGame()">
           </q-btn>
-          <div class="text-body1 text-blue">
-            <q-card-section vertical  >
+            <q-card-section vertical class="text-h6 text-blue" >
               <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
                 <q-item-section @click="historymeaning(word.title)" >
                   {{ word.title }}
                 </q-item-section>
-                <!-- <q-item-section avatar>
-                  <q-btn flat round color="orange" icon="delete_forever" @click="removeHistory(word.title)"></q-btn>
-                </q-item-section> -->
               </q-item>
             </q-card-section>
-        </div>
-       </q-card-section>
      </q-card-section>
 
       <q-separator></q-separator>
 
       <q-card-actions>
           <div class="q-pa-md">
-          <div>
               <q-carousel
                 animated
                 v-model:fullscreen="isFullscreen"
@@ -257,14 +191,12 @@ opacity: .5!important;
               </template>
               </q-carousel>
           </div>
-          </div>
       </q-card-actions>
   
       <q-separator></q-separator>
-      <q-card-actions>
 
+      <q-card-actions>
       <div class="q-pa-md">
-      <div>
           <q-carousel
             animated
             v-model:fullscreen="isFullscreen"
@@ -275,7 +207,6 @@ opacity: .5!important;
             height="50px" 
             control-color="primary"
           >
-
             <template v-for="(item,index) in monthfilterList">
                <q-carousel-slide :name=index class="column no-wrap flex-center">
               <q-btn push :label=numtoStringM(item.year,item.month+1)
@@ -285,40 +216,54 @@ opacity: .5!important;
             </template>
           </q-carousel>
       </div>
-      </div>
-   
     </q-card-actions>
-      <q-separator></q-separator>
+
+    <q-separator></q-separator>
       
       <q-card-actions vertical>
-        <t1 v-for="(item,index) in historyList" :key="index">
+        <!-- <template -->
+        <div v-for="(item,index) in historyList" :key="index">
           <q-item v-if="item.year==showYear && item.month==showMonth">
               <q-btn  push :label= numtoString(item.year,item.month+1,item.day) flat class="q-py-0" icon="date_range"/
               @click="setShowlist(item.year,item.month,item.day)">
-          <!-- <q-icon name="swap_horiz" style="color: #9b9095; font-size: 1em"  /> -->
               <q-badge color="orange" floating>{{item.number}}</q-badge>
               </q-btn>
           </q-item>  
-        </t1>      
+        </div>      
       </q-card-actions>
 
     </q-card>
-
   </div>
+
+    <div class="my-card" :style="{display:isDisplay}" flat bordered>
+      <q-card   >
+          <q-card-section class="text-h6" vertical >
+            <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
+              <q-item-section @click="gameMatch(word.title)" >
+                {{ word.title }}
+              </q-item-section>
+            </q-item>
+            <q-separator></q-separator>
+            <q-item>
+                {{random_item()}}
+            </q-item>
+            <q-separator></q-separator>
+              <q-btn flat round color="green" icon="exit_to_app" @click="gameOver()"></q-btn>
+              <q-btn flat round color="green" icon="quiz" @click="setGame()"></q-btn>
+              <q-btn flat round color="green" icon="question_answer" @click="answerQuiz()"></q-btn>
+          </q-card-section>   
+        </q-card>
+      </div>  
+
 </div>
 
 <script src="https://unpkg.com/vue@next"></script>
 <script src="https://cdn.jsdelivr.net/npm/quasar@2.0.3/dist/quasar.umd.prod.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js"></script> -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/quasar@2.0.3/dist/quasar.umd.prod.js"></script> -->
 
-<!-- <script type="module"> -->
-  <script type="module">
-  // import { createApp, ref, reactive, onMounted, computed, Quasar  } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.7/vue.esm-browser.min.js';
+<script type="module">
+
   const { createApp, ref, reactive, onMounted, computed  } = Vue;
- 
-  // import { Quasar } from 'quasar';
 
   const app = {
   setup () {
@@ -370,7 +315,6 @@ opacity: .5!important;
       const slide= ref(0);
 
 
-      // count thiscount = ref(0);
       const $q = useQuasar();
 
       onMounted(() => {
@@ -380,11 +324,8 @@ opacity: .5!important;
           showMonth.value=d.getMonth(); 
           axios.get('https://random-word-api.herokuapp.com/word?number=10')
           .then((response) => {
-              console.log("1:", response.data);
               words=response.data;
-              console.log("2:", words);
               for (i=0;i<10;i++) {
-              console.log(words[i]);    
                   // 定義todoList的格式: id(唯一值), title(單字), Completed(背好沒) 
                   todoList.push({
                   id: Date.now()+i,
@@ -394,7 +335,6 @@ opacity: .5!important;
               }
           });
             // 透過getRemeberWord，抓取存在localstorage的單字
-                console.log("list:",todoList);
                getRememberWord();
                 history.forEach(function(obj) {
                   checkhistory(obj);
@@ -407,8 +347,6 @@ opacity: .5!important;
                 })
 
                 setYearlist(showYear.value);
-                console.log("M:",monthList);
-                console.log("Y:",yearList);
 
       });  // complete onMounted
 
@@ -420,18 +358,14 @@ opacity: .5!important;
                 // showOr.value=false;
                 storeOr.value=false;
                 var isComplete= false;
-                console.log('meaning index: ', sword);
                 axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+sword )
                 .then((response) => {
-                  console.log('H:res:', response);
                   if(response.request.readyState === 4 && response.status === 200){ //有load完才跑下面
                     // check data.length
                     var childArray=response.data;
 
                     for (j=0;j<childArray.length;j++){ 
                       for (k=0;k<childArray[j].meanings.length;k++){
-                          // console.log("jkm:",j,k,m,childArray[j].meanings[k].definitions[0].definition);
-                          // if (qcount++<11) break;
                           meaningNumber.value+=childArray[j].meanings[k].definitions.length;
                         };};
                     j=0; k=0; m=0; n=0; //meaningList=[]; 
@@ -450,7 +384,6 @@ opacity: .5!important;
                                   synonyms: childArray[j].meanings[k].definitions[m].synonyms,
                                   antonyms: childArray[j].meanings[k].definitions[m].antonyms,
                                   });
-                            console.log(meaningList);      
                             n++;
                               }; // end the third
                               k++;
@@ -463,7 +396,6 @@ opacity: .5!important;
                       isComplete = true;
                       } // end of the first
                     } // end of while   
-                    console.log(meaningList);
                     wordMeaning.value=response.data[0].meanings[0].definitions[0].definition;
                     wordExample.value=response.data[0].meanings[0].definitions[0].example;
                     showOr.value=true;
@@ -545,16 +477,12 @@ opacity: .5!important;
                 var isComplete= false;
                 axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+sword )
                 .then((response) => {
-                  console.log('H:res:', response);
                   if(response.request.readyState === 4 && response.status === 200){ //有load完才跑下面
                     // check data.length
                     var childArray=response.data;
 
                     for (j=0;j<childArray.length;j++){ 
                       for (k=0;k<childArray[j].meanings.length;k++){
-                          // console.log("jkm:",j,k,m,childArray[j].meanings[k].definitions[0].definition);
-                          // if (qcount++<11) break;
-                          // meaningNumber.value+=childArray[j].meanings[k].definitions.length;
                         };};
                     j=0; k=0; m=0; n=0; //meaningList=[]; 
                     while (!isComplete) {
@@ -569,7 +497,6 @@ opacity: .5!important;
                                   definition: childArray[j].meanings[k].definitions[m].definition,
                                   example: childArray[j].meanings[k].definitions[m].example,
                                   });
-                            console.log(meaningameList);      
                             n++;
                               }; // end the third
                               k++;
@@ -582,13 +509,12 @@ opacity: .5!important;
                       isComplete = true;
                       } // end of the first
                     } // end of while   
-                    console.log(meaningameList);
                   }else{ 
-                    console.log("error"); //萬一沒load完就跑下面顯示錯誤提示
+                    alert("error"); //萬一沒load完就跑下面顯示錯誤提示
                   }
                 })
                 .catch( (error) => {
-                  console.log(error);
+                  alert(error);
                 });
                };
                
@@ -599,15 +525,13 @@ opacity: .5!important;
                 synonymList.value=[''];
                 antonymList.value=[''];
                 currentNumber.value++;
-                console.log('meaning index: ',currentNumber.value);
-                  console.log(meaningList);
-                    if (currentNumber.value > meaningNumber.value) {
-                      currentNumber.value=1; }
-                      wordMeaning.value=meaningList[currentNumber.value-1].definition;
-                      wordExample.value=meaningList[currentNumber.value-1].example;
-                      partofSpeech.value='('+meaningList[currentNumber.value-1].partofSpeech+')';
-                      synonymList.value =meaningList[currentNumber.value-1].synonyms;
-                      antonymList.value =meaningList[currentNumber.value-1].antonyms;
+                if (currentNumber.value > meaningNumber.value) {
+                  currentNumber.value=1; }
+                  wordMeaning.value=meaningList[currentNumber.value-1].definition;
+                  wordExample.value=meaningList[currentNumber.value-1].example;
+                  partofSpeech.value='('+meaningList[currentNumber.value-1].partofSpeech+')';
+                  synonymList.value =meaningList[currentNumber.value-1].synonyms;
+                  antonymList.value =meaningList[currentNumber.value-1].antonyms;
                };
 
           const wordmeaning = (sword) => {
@@ -618,18 +542,14 @@ opacity: .5!important;
                 synonymList.value=[''];
                 antonymList.value=[''];
                 var isComplete= false;
-                console.log('Word meaning index: ', sword);
                 axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+todoList[sword].title )
                 .then((response) => {
-                  console.log('res:', response);
                   if(response.request.readyState === 4 && response.status === 200){ //有load完才跑下面
                     // check data.length
                     var childArray=response.data;
 
                     for (j=0;j<childArray.length;j++){ 
                       for (k=0;k<childArray[j].meanings.length;k++){
-                          // console.log("jkm:",j,k,m,childArray[j].meanings[k].definitions[0].definition);
-                          // if (qcount++<11) break;
                           meaningNumber.value+=childArray[j].meanings[k].definitions.length;
                         };};
                     j=0; k=0; m=0; n=0; //meaningList=[]; 
@@ -640,7 +560,6 @@ opacity: .5!important;
                         if (k<childArray[j].meanings.length) {
 
                           for (m=0;m<childArray[j].meanings[k].definitions.length;m++) {
-                            // console.log("jkm:",j,k,m,childArray[j].meanings[k].definitions[m].definition);
                             meaningList.push({
                                   mId : n,
                                   partofSpeech: childArray[j].meanings[k].partOfSpeech,
@@ -649,7 +568,6 @@ opacity: .5!important;
                                   synonyms: childArray[j].meanings[k].definitions[m].synonyms,
                                   antonyms: childArray[j].meanings[k].definitions[m].antonyms,
                                   });
-                            console.log(meaningList);      
                             n++;
                               }; // end the third
                               k++;
@@ -662,24 +580,20 @@ opacity: .5!important;
                       isComplete = true;
                       } // end of the first
                     } // end of while   
-                    console.log(meaningList);
                     wordMeaning.value=response.data[0].meanings[0].definitions[0].definition;
                     wordExample.value=response.data[0].meanings[0].definitions[0].example;
                     showOr.value=true;
                     phonetic.value='['+response.data[0].phonetic+']';
                     thisword.value=todoList[sword].title;
                     thisId.value= todoList[sword].id;
-                    console.log("code-5:",sword);
                     phoneticAudio.value="https:"+response.data[0].phonetics[0].audio;
-                    // meaningNumber.value=response.data[0].meanings[0].definitions.length;
                     partofSpeech.value='('+response.data[0].meanings[0].partOfSpeech+')';
                     synonymList.value = response.data[0].meanings[0].definitions[0].synonyms;
                     antonymList.value = response.data[0].meanings[0].definitions[0].antonyms;
                     
                     currentNumber.value =1;
-                    console.log("此單字找到解釋");
                   }else{ 
-                    console.log("error"); //萬一沒load完就跑下面顯示錯誤提示
+                    alert("error"); //萬一沒load完就跑下面顯示錯誤提示
                   }
                 })
                 .catch( (error) => {
@@ -711,10 +625,7 @@ opacity: .5!important;
                 }
                 axios.get('https://random-word-api.herokuapp.com/word?number=1')
                 .then((response) => {
-                    console.log("changeword:",response);
                     words=response.data;
-                    console.log("words:",words);
-                    console.log(index,words);
                     todoList[index].title = words[0];
                     wordmeaning(index);
                     });
@@ -774,8 +685,6 @@ opacity: .5!important;
                     function updatehistory(templist) {
                         return templist.year === d.getFullYear() && templist.month === d.getMonth() && templist.day === d.getDate(); 
                     }  
-                    console.log("historyList:",historyList);
-                    console.log("index:",index);
                     // check 
                     if (index>0)              
                     historyList[index].number++; 
@@ -802,7 +711,6 @@ opacity: .5!important;
             rememberofToday.value=0;
             rememberofMonth.value=0;
 
-            console.log("localstorage:",JSON.parse(localStorage.getItem('newword')));            
                 if (localStorage.getItem('newword')) {
                   tempHistory.forEach(item => {
                     d_today.setTime(Date.now());
@@ -824,27 +732,20 @@ opacity: .5!important;
                         month: d.getMonth(),
                         day: d.getDate(),
                     });
-                    // console.log("Today:",rememberofToday);
                     };
                     rememberofYear.value++;
                     history.push({
                     id: item.id,
                     title: item.title,
-                    // year: d.getFullYear(),
-                    // month: d.getMonth(),
-                    // day: d.getDate(),
                   });
                   });
  
-                  // history = JSON.parse(localStorage.getItem('word'));
-                console.log("history:",history);
                 }
               };
 
             const setMonthlist =(year,month) => {
               showMonth.value=month;
               showYear.value=year;   
-              console.log("showmonth:",showMonth.value);           
             }  
 
             const setYearlist =(year) => {
@@ -857,7 +758,6 @@ opacity: .5!important;
                   month: obj.month,
                   number: obj.number,
                  });
-              console.log("showyear:",showYear.value);           
             })
           }  
 
@@ -869,11 +769,8 @@ opacity: .5!important;
 
               showdateStr = numtoString(year,month+1,day);
               showDate.value = showdateStr;
-              console.log("showdateStr: ", showdateStr);
               showList.length=0;
               d_showdate.setTime(Date.parse(showdateStr));
-              console.log("d_showdateStr: ", d_showdate);
-              console.log("today: ",d.toDateString());  
               rememberofToday.value=0;
               rememberofMonth.value=0;
 
@@ -892,7 +789,6 @@ opacity: .5!important;
                     month: d.getMonth(),
                     day: d.getDate(),
                 });
-                // console.log("Today:",rememberofToday);
                 };
               });
               if (isDisplay.value == "block")
@@ -903,12 +799,8 @@ opacity: .5!important;
 
             const index = history.findIndex(checkid)
             function checkid(wordlist) {
-              console.log("wordlist.title:",wordlist.title);
                   return wordlist.title === title; 
                 }
-                console.log("title",title);
-                console.log("index",index);
-                console.log("history:",history);
                 history.splice(index, 1);
                 let objData = JSON.stringify(history);
                   // store here, change to store by id
@@ -916,16 +808,10 @@ opacity: .5!important;
             };
             const removeTodo = (cid) => {
             const index = todoList.findIndex(checkid)
-            console.log("code-02:",cid);
 
             function checkid(wordlist) {
                   return wordlist.id === cid; 
                 }
-               console.log("code-03:",index);
-                console.log("code-04:",todoList[index].title);
-                // if (todoList[index].completed) { 
-                    // setRemeberWord(todoList[index].title);
-                // };
                 
                 todoList.splice(index, 1);
               };
@@ -943,7 +829,6 @@ opacity: .5!important;
               let BreakException = {};
               var finditem=false;
               var addone=0;
-              // console.log("obj:",obj);
               try {
               historyList.forEach(function(obj1,index){
                   if (obj1.year==getyear(obj.id) && obj1.month==getmonth(obj.id) && obj1.day==getday(obj.id)){
@@ -957,8 +842,6 @@ opacity: .5!important;
                   if (e !== BreakException) throw e;
               }
               if (!finditem) {
-                console.log("H-M:",getmonth(obj.id));
-                console.log("H:D",getday(obj.id));
                   historyList.push({
                   year: getyear(obj.id),
                   month: getmonth(obj.id),
@@ -972,7 +855,6 @@ opacity: .5!important;
               let BreakException = {};
               var finditem=false;
               var addnumber=0;
-              // console.log("obj:",obj);
               try {
               monthList.forEach(function(obj1,index){
                   if (obj1.year==obj.year && obj1.month==obj.month){
@@ -986,8 +868,6 @@ opacity: .5!important;
                   if (e !== BreakException) throw e;
               }
               if (!finditem) {
-                // console.log(getmonth(obj.id));
-                // console.log(getday(obj.id));
                   monthList.push({
                   year: obj.year,
                   month: obj.month,
@@ -1000,7 +880,6 @@ opacity: .5!important;
               let BreakException = {};
               var finditem=false;
               var addnumber=0;
-              // console.log("obj:",obj);
               try {
               yearList.forEach(function(obj1,index){
                   if (obj1.year==obj.year){
@@ -1014,8 +893,6 @@ opacity: .5!important;
                   if (e !== BreakException) throw e;
               }
               if (!finditem) {
-                // console.log(getmonth(obj.id));
-                // console.log(getday(obj.id));
                   yearList.push({
                   year: obj.year,
                   number: obj.number,
@@ -1024,26 +901,20 @@ opacity: .5!important;
           }
 
           const numtoStringY = (year) => {
-            // console.log("numtoString:",year,month,day);
-            console.log("Y:",year.toString());
             return year.toString();
             
           }
 
           const numtoStringM = (year,month) => {
-            console.log("numtoStringM:",year,month);
-            // slide1.value=year.toString()+'/'+month.toString()
             return year.toString()+'/'+month.toString()
           }
 
           const numtoString = (year,month,day) => {
-            // console.log("numtoString:",year,month,day);
             return year.toString()+'/'+month.toString()+'/'+day.toString()
           }
           const getyear =(dateid) => {
             var tempdate= new Date();
             tempdate.setTime(dateid);
-            // console.log("tempdate.getFullYear()",tempdate.getFullYear())
             return tempdate.getFullYear()
           }
           const getmonth =(dateid) => {
