@@ -58,7 +58,7 @@ opacity: .5!important;
         <q-item-section>
           <q-item-label>10 words for Day</q-item-label>
           <q-item-label caption>
-            Copyright ©2020 Prisca.
+            Copyright ©2021 Prisca.
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -153,6 +153,25 @@ opacity: .5!important;
         </q-item>
     </q-card>
 
+    <div class="my-card" :style="{display:isDisplay}" flat bordered>
+      <q-card   >
+          <q-card-section class="text-h6" vertical >
+            <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
+              <q-item-section @click="gameMatch(word.title)" >
+                {{ word.title }}
+              </q-item-section>
+            </q-item>
+            <q-separator></q-separator>
+            <q-item>
+                {{ quiztxt }}
+            </q-item>
+            <q-separator></q-separator>
+              <q-btn flat round color="green" icon="exit_to_app" @click="gameOver()"></q-btn>
+              <q-btn flat round color="green" icon="quiz" @click="random_item()"></q-btn>
+              <q-btn flat round color="green" icon="question_answer" @click="answerQuiz()"></q-btn>
+          </q-card-section>   
+        </q-card>
+      </div>  
 
   <div class="my-card" flat bordered >
     <q-card >
@@ -235,25 +254,6 @@ opacity: .5!important;
     </q-card>
   </div>
 
-    <div class="my-card" :style="{display:isDisplay}" flat bordered>
-      <q-card   >
-          <q-card-section class="text-h6" vertical >
-            <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
-              <q-item-section @click="gameMatch(word.title)" >
-                {{ word.title }}
-              </q-item-section>
-            </q-item>
-            <q-separator></q-separator>
-            <q-item>
-                {{random_item()}}
-            </q-item>
-            <q-separator></q-separator>
-              <q-btn flat round color="green" icon="exit_to_app" @click="gameOver()"></q-btn>
-              <q-btn flat round color="green" icon="quiz" @click="setGame()"></q-btn>
-              <q-btn flat round color="green" icon="question_answer" @click="answerQuiz()"></q-btn>
-          </q-card-section>   
-        </q-card>
-      </div>  
 
 </div>
 
@@ -468,6 +468,7 @@ opacity: .5!important;
                   meaningforGame(item.title);
                  })
                  isDisplay.value='block';
+                 random_item();
                }
                const gameOver = () => {
                  isDisplay.value='none';
