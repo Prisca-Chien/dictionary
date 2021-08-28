@@ -17,7 +17,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@^1.0.0/font/bootstrap-icons.css" rel="stylesheet" type="text/css">
   <link href="https://cdn.jsdelivr.net/npm/animate.css@^4.0.0/animate.min.css" rel="stylesheet" type="text/css">
   <link href="https://cdn.jsdelivr.net/npm/quasar@2.0.3/dist/quasar.rtl.prod.css" rel="stylesheet" type="text/css">
-<style>
+<style type="text/css">
 body.desktop .q-focusable:focus .q-focus-helper,
 body.desktop .q-hoverable:hover .q-focus-helper {
 background: inherit;
@@ -30,6 +30,14 @@ opacity: 0;
 .q-focus-helper {
 opacity: 0;
 transition: unset;
+}
+.my-card {
+  width: 100%;
+  max-width: 350px
+}
+.my_hover{
+background: inherit;
+opacity: .5!important;
 }
 </style>
 </head>
@@ -63,8 +71,8 @@ transition: unset;
           {{ word.title }}
         </q-item-section>
         <q-item-section avatar>
-              <q-btn flat round color="red" icon="swap_horiz" @click="changeword(word.id)"></q-btn>
-            </q-item-section>
+            <q-btn flat round color="red" icon="swap_horiz" @click="changeword(word.id)"></q-btn>
+        </q-item-section>
             <!-- <q-item-section avatar>
               <q-btn label="背完" flat round color="accent" icon="verified_user" @click="setRemeberWord(word.title,word.id)"></q-btn>
             </q-item-section> -->
@@ -85,7 +93,6 @@ transition: unset;
         <q-item-section >
           <!-- <q-item-label  class="flex text-blue text-body1"  > -->
           <q-item-label  >
-            <!-- {{ thisword }} -->
           <!-- <template v-if="storeOr"> -->
             <div v-if=storeOr>
             <q-btn  :label="thisword" no-caps flat class="no-padding text-blue text-body1" @click="setRemeberWord(thisword,thisId)">
@@ -155,7 +162,7 @@ transition: unset;
         <q-item-section top class="flex-left " > Synonym
             <q-separator ></q-separator>
 
-          <q-item  dense calss="dense  flex-center " style="padding: 10px 0 !important;" clickable v-for="synonym in synonymList" :key="index">
+          <q-item  dense calss="dense"  clickable v-for="synonym in synonymList" :key="index">
             <!-- <q-item-label class="q-my-xs" @click="historymeaning(synonym)"> -->
               <q-item-label @click="historymeaning(synonym)">
                 {{synonym}}  
@@ -181,36 +188,54 @@ transition: unset;
         </q-item>
       </q-card>
 
+      <div class="my-card" :style="{display:isDisplay}">
+    <q-card  flat bordered >
+        <q-card-section class="text-h6" vertical >
+          <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
+            <q-item-section @click="gameMatch(word.title)" >
+              {{ word.title }}
+            </q-item-section>
+          </q-item>
+          <q-separator></q-separator>
+          <q-item>
+            <q-label>
+              {{random_item()}}
+            </q-label>
+          </q-item>
+          <q-separator></q-separator>
+            <q-btn flat round color="green" icon="exit_to_app" @click="gameOver()"></q-btn>
+            <q-btn flat round color="green" icon="quiz" @click="setGame()"></q-btn>
+            <q-btn flat round color="green" icon="question_answer" @click="answerQuiz()"></q-btn>
+        </q-card-section>   
+      </q-card>
+    </div>
+
     <q-card class="my-card" flat bordered>
       <q-card-section horizontal>
-        <q-card-section class="q-pt-xs">
+       <q-card-section class="q-pt-xs">
           <!-- <div class="text-overline">單字解釋</div> -->
-          <div class="text-h5 q-mt-sm q-mb-xs">{{ showDate }}</div>
+        <div class="text-h5 q-mt-sm q-mb-xs">
+          <q-btn push :label=showDate flat  class="q-py-0" icon="date_range"
+            @click="setGame()">
+          </q-btn>
           <div class="text-body1 text-blue">
-          <q-card-section vertical  >
-            <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
-              <q-item-section @click="historymeaning(word.title)" >
-                {{ word.title }}
-              </q-item-section>
-            </q-item>
-          </q-card-section>
-          </div>
-        </q-card-section>
-
-      </q-card-section>
+            <q-card-section vertical  >
+              <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
+                <q-item-section @click="historymeaning(word.title)" >
+                  {{ word.title }}
+                </q-item-section>
+                <!-- <q-item-section avatar>
+                  <q-btn flat round color="orange" icon="delete_forever" @click="removeHistory(word.title)"></q-btn>
+                </q-item-section> -->
+              </q-item>
+            </q-card-section>
+        </div>
+       </q-card-section>
+     </q-card-section>
 
       <q-separator></q-separator>
 
       <q-card-actions>
-        
-        <!-- <q-btn push label="2021" flat  class="q-py-0" icon="date_range" />
-          <q-badge color="orange" floating>{{rememberofYear}}</q-badge>
-        </q-btn>      
-        <q-btn :label="showDate" flat  class="q-py-0" icon="today" />
-          <q-badge color="orange" floating>{{rememberofToday}}</q-badge>
-        </q-btn>       -->
-          <!-- <div class="row"  style="width:300px" > -->
-          <!-- <div class="col-9 col-md-8"> -->
           <div class="q-pa-md">
           <div>
               <q-carousel
@@ -232,49 +257,37 @@ transition: unset;
               </template>
               </q-carousel>
           </div>
-        
-        </div>
-        
-
+          </div>
       </q-card-actions>
+  
       <q-separator></q-separator>
-  <q-card-actions>
+      <q-card-actions>
 
-  <div class="q-pa-md">
-  <div>
-      <q-carousel
-        animated
-        v-model:fullscreen="isFullscreen"
-        v-model="slide1"
-        arrows
-        infinite
-        padding
-        height="50px" 
-        control-color="primary"
-      >
+      <div class="q-pa-md">
+      <div>
+          <q-carousel
+            animated
+            v-model:fullscreen="isFullscreen"
+            v-model="slide1"
+            arrows
+            infinite
+            padding
+            height="50px" 
+            control-color="primary"
+          >
 
-      <!-- <t1 v-for="(item,index) in historyList" :key="index">
-        <q-item v-if="item.year==showYear && item.month==showMonth"> -->
-      <!-- <t2 v-if="item.year==showYear"> -->
-     
-      <template v-for="(item,index) in monthfilterList">
-        <q-carousel-slide :name=index  class="column no-wrap flex-center">
-        <q-btn push :label=numtoStringM(item.year,item.month+1)
-        @click="setMonthlist(item.year,item.month)" flat icon="date_range" />
-        <q-badge color="orange" floating>{{item.number}}</q-badge>
-        </q-carousel-slide>
-      </template>
-        </q-carousel>
-  </div>
-
-</div>
-    <!-- <q-carousel-slide name="2021/8/21"  class="column no-wrap flex-center">
-        <q-btn push label="2021/8/21" flat  class="q-py-0" icon="date_range" />
-        <q-badge color="orange" floating>7</q-badge>
-      </q-carousel-slide> -->
-
+            <template v-for="(item,index) in monthfilterList">
+               <q-carousel-slide :name=index class="column no-wrap flex-center">
+              <q-btn push :label=numtoStringM(item.year,item.month+1)
+              @click="setMonthlist(item.year,item.month)" flat icon="date_range" />
+              <q-badge color="orange" floating>{{item.number}}</q-badge>
+              </q-carousel-slide>
+            </template>
+          </q-carousel>
+      </div>
+      </div>
    
-  </q-card-actions>
+    </q-card-actions>
       <q-separator></q-separator>
       
       <q-card-actions vertical>
@@ -313,6 +326,7 @@ transition: unset;
       const todoList = reactive([]);
       const todoList1 = reactive([]);
       const newTodo = ref('');
+      const isDisplay = ref('none');
       var words = [];
       var i=0;
       var j=0;
@@ -326,6 +340,9 @@ transition: unset;
       const monthfilterList = reactive([]);
       const showList = reactive([]);
       const meaningList = reactive([]);
+      const meaningameList =reactive([]);
+      const answeris= ref('');
+      const quiztxt= ref('');
       const showDate = ref('');
       const showYear = ref();
       const showMonth = ref();
@@ -474,7 +491,108 @@ transition: unset;
                   antonymList.value=[''];
                 });
                };
-          
+
+               const random_item = () =>{
+                var definitionR;  
+                var rectangle=meaningameList[Math.floor(Math.random()*meaningameList.length)];
+                  for (const key in rectangle) {
+                      if (key == "word") {
+                        answeris.value=rectangle[key];
+                      }
+                      if (key == "definition")
+                        definitionR=rectangle[key];
+                    }
+                    quiztxt.value=definitionR;
+                    return definitionR;
+                }      
+               
+                const  answerQuiz = () => {
+                 $q.notify({
+                  message: answeris.value,
+                  icon: 'question_answer'
+                 })
+
+               }
+
+                const gameMatch = (answerWord) => {
+                 if (answerWord == answeris.value){ 
+                 $q.notify({
+                  message: 'Bingo',
+                  icon: 'thumb_up_off_alt'
+                 })
+                }
+
+                 else 
+                 $q.notify({
+                  message: 'Try again',
+                  icon: 'thumb_down_off_alt'
+                 })
+
+               }
+
+               const setGame = () => {
+                meaningameList.length=0;
+                 showList.forEach(item => {
+                  meaningforGame(item.title);
+                 })
+                 isDisplay.value='block';
+               }
+               const gameOver = () => {
+                 isDisplay.value='none';
+               }
+
+               const meaningforGame = (sword) => {
+                var isComplete= false;
+                axios.get('https://api.dictionaryapi.dev/api/v2/entries/en_US/'+sword )
+                .then((response) => {
+                  console.log('H:res:', response);
+                  if(response.request.readyState === 4 && response.status === 200){ //有load完才跑下面
+                    // check data.length
+                    var childArray=response.data;
+
+                    for (j=0;j<childArray.length;j++){ 
+                      for (k=0;k<childArray[j].meanings.length;k++){
+                          // console.log("jkm:",j,k,m,childArray[j].meanings[k].definitions[0].definition);
+                          // if (qcount++<11) break;
+                          // meaningNumber.value+=childArray[j].meanings[k].definitions.length;
+                        };};
+                    j=0; k=0; m=0; n=0; //meaningList=[]; 
+                    while (!isComplete) {
+
+                      if (j<childArray.length) {
+
+                        if (k<childArray[j].meanings.length) {
+
+                          for (m=0;m<childArray[j].meanings[k].definitions.length;m++) {
+                            meaningameList.push({
+                                  word : sword,
+                                  definition: childArray[j].meanings[k].definitions[m].definition,
+                                  example: childArray[j].meanings[k].definitions[m].example,
+                                  });
+                            console.log(meaningameList);      
+                            n++;
+                              }; // end the third
+                              k++;
+                        } else // else of the second
+                        {
+                          j++;k=0;
+                        } // end of the second 
+                      } else // else of first
+                      {
+                      isComplete = true;
+                      } // end of the first
+                    } // end of while   
+                    console.log(meaningameList);
+                  }else{ 
+                    console.log("error"); //萬一沒load完就跑下面顯示錯誤提示
+                  }
+                })
+                .catch( (error) => {
+                  console.log(error);
+                });
+               };
+               
+
             const changeMeaning = () => {
 
                 // meaningNumber.value=0;
@@ -605,14 +723,7 @@ transition: unset;
 
           // 歷史值只保留10筆，超過則刪除第1筆
           const setRemeberWord = (strData,cindex) => { 
-                console.log("length:",history.length);
-                if (history.length > 99) {
-                  console.log("splice");
-                history.splice(0, 1);
-                }
                 pushData(strData);
-                removeTodo(cindex);
-                console.log("code-01:",cindex);
               };
           // 將已背好的單字，傳到pushData，並用JSON格式存在Localstorage
           const pushData = (strData) => { 
@@ -627,7 +738,6 @@ transition: unset;
                   cancel: true,
                   persistent: true
                 }).onOk(() => {
-                  console.log("push:",strData);
                   rememberofYear.value++;
                   rememberofToday.value++;
                   rememberofMonth.value++;
@@ -643,27 +753,36 @@ transition: unset;
                     month: d.getMonth(),
                     day: d.getDate(),
                   });
-                  var currentWord = [];
-                  currentWord.push({
-                    id: Date.now(),
-                    title: strData,
-                    year: d.getFullYear(),
-                    month: d.getMonth(),
-                    day: d.getDate(),
-                  });
-                  currentWord.forEach(function(obj) {
-                  checkhistory(obj);
-                });
+                  // refresh by today
+                  setShowlist(d.getFullYear(),d.getMonth(),d.getDate());
+                  // update yearList,monthList,HistoryList
+                  var index = yearList.findIndex(checkyear)
+                    function checkyear(templist) {
+                        return templist.year === d.getFullYear(); 
+                    }     
+                    if (index>0)              
+                    yearList[index].number++; 
 
+                    var index = monthfilterList.findIndex(checkmonth)
+                    function checkmonth(templist) {
+                        return templist.year === d.getFullYear() && templist.month === d.getMonth(); 
+                    }                 
+                    if (index>0)              
+                    monthfilterList[index].number++; 
 
-                  // history.title.push(strData);
-                  console.log(history[0].title);
+                    var index = historyList.findIndex(updatehistory)
+                    function updatehistory(templist) {
+                        return templist.year === d.getFullYear() && templist.month === d.getMonth() && templist.day === d.getDate(); 
+                    }  
+                    console.log("historyList:",historyList);
+                    console.log("index:",index);
+                    // check 
+                    if (index>0)              
+                    historyList[index].number++; 
+
                   let objData = JSON.stringify(history);
-                  // let objData = JSON.stringify(todoList);
-                  console.log("obj:",objData);
                   // store here, change to store by id
                   localStorage.setItem('newword', objData);
-                  console.log(history[0].id);
 
                 }).onCancel(() => {
                   $q.notify({
@@ -761,7 +880,6 @@ transition: unset;
               history.forEach(item => {
                 // change to a function.
                 d.setTime(item.id);
-                console.log("d:",d,"d_showdate: ",d_showdate);
                 if (datesAreOnSameMonth(d,d_showdate)) {
                   rememberofMonth.value++;
                 }
@@ -777,34 +895,35 @@ transition: unset;
                 // console.log("Today:",rememberofToday);
                 };
               });
+              if (isDisplay.value == "block")
+                setGame();
             }  
 
-          const removeTodo = (cid) => {
-            const index = todoList.findIndex(checkid)
-            console.log("code-02:",cid);
+          const removeHistory = (title) => {
 
+            const index = history.findIndex(checkid)
             function checkid(wordlist) {
-                  return wordlist.id === cid; 
+              console.log("wordlist.title:",wordlist.title);
+                  return wordlist.title === title; 
                 }
-               console.log("code-03:",index);
-                console.log("code-04:",todoList[index].title);
-                // if (todoList[index].completed) { 
-                    // setRemeberWord(todoList[index].title);
-                // };
-                
-                todoList.splice(index, 1);
-              };
-              const datesAreOnSameDay = (first, second) =>
+                console.log("title",title);
+                console.log("index",index);
+                console.log("history:",history);
+                history.splice(index, 1);
+                let objData = JSON.stringify(history);
+                  // store here, change to store by id
+                localStorage.setItem('newword', objData);
+            };
+
+            const datesAreOnSameDay = (first, second) =>
                 first.getFullYear() === second.getFullYear() &&
                 first.getMonth() === second.getMonth() &&
                 first.getDate() === second.getDate();   
 
-                const datesAreOnSameMonth = (first, second) =>
+            const datesAreOnSameMonth = (first, second) =>
                 first.getFullYear() === second.getFullYear() &&
                 first.getMonth() === second.getMonth();
 
-
-          // 改history不需要紀錄year,month,day
           const checkhistory = (obj) => {
               let BreakException = {};
               var finditem=false;
@@ -823,8 +942,8 @@ transition: unset;
                   if (e !== BreakException) throw e;
               }
               if (!finditem) {
-                // console.log(getmonth(obj.id));
-                // console.log(getday(obj.id));
+                console.log("H-M:",getmonth(obj.id));
+                console.log("H:D",getday(obj.id));
                   historyList.push({
                   year: getyear(obj.id),
                   month: getmonth(obj.id),
@@ -951,6 +1070,9 @@ transition: unset;
               rememberofMonth,
               rememberofshow,
               meaningList,
+              meaningameList,
+              answeris,
+              quiztxt,
               partofSpeech,
               synonymList,
               antonymList,
@@ -959,6 +1081,8 @@ transition: unset;
               getRememberWord,
               pushData,
               historymeaning,
+              meaningforGame,
+              gameMatch,
               playSound,
               changeMeaning,
               datesAreOnSameDay,
@@ -969,14 +1093,21 @@ transition: unset;
               numtoString,
               numtoStringM,
               numtoStringY,
+              removeHistory,
               setShowlist,
               setMonthlist,
               setYearlist,
+              setGame,
+              gameOver,
+              answerQuiz,
+              random_item,
+              // get_random_word,
               showOr,
               storeOr,
               slide,
               slide1,
               isFullscreen,
+              isDisplay,
             }
           }
     }
@@ -987,18 +1118,6 @@ myapp.mount('#q-app');
 
 </script>
 
-<style type="text/css">
-
-.my-card {
-  width: 100%;
-  max-width: 350px
-}
-.my_hover{
-background: inherit;
-opacity: .5!important;
-}
-
-</style>
 
 </body>
 </html>
