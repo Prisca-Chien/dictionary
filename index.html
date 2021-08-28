@@ -721,9 +721,9 @@ opacity: .5!important;
               
                 };
 
-          // 歷史值只保留10筆，超過則刪除第1筆
           const setRemeberWord = (strData,cindex) => { 
                 pushData(strData);
+                removeTodo(cindex);
               };
           // 將已背好的單字，傳到pushData，並用JSON格式存在Localstorage
           const pushData = (strData) => { 
@@ -914,6 +914,21 @@ opacity: .5!important;
                   // store here, change to store by id
                 localStorage.setItem('newword', objData);
             };
+            const removeTodo = (cid) => {
+            const index = todoList.findIndex(checkid)
+            console.log("code-02:",cid);
+
+            function checkid(wordlist) {
+                  return wordlist.id === cid; 
+                }
+               console.log("code-03:",index);
+                console.log("code-04:",todoList[index].title);
+                // if (todoList[index].completed) { 
+                    // setRemeberWord(todoList[index].title);
+                // };
+                
+                todoList.splice(index, 1);
+              };
 
             const datesAreOnSameDay = (first, second) =>
                 first.getFullYear() === second.getFullYear() &&
@@ -1094,6 +1109,7 @@ opacity: .5!important;
               numtoStringM,
               numtoStringY,
               removeHistory,
+              removeTodo,
               setShowlist,
               setMonthlist,
               setYearlist,
