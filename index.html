@@ -79,6 +79,11 @@ opacity: .5!important;
       </q-item>
       </q-card-section>
 
+      <q-separator></q-separator>
+      <q-input v-model="text" :dense="dense" class="text-h6" @keyup.enter="newWord(text)">
+
+      </q-input>
+
     </q-card>
 
     <q-card class="my-card">
@@ -321,6 +326,7 @@ opacity: .5!important;
 
       const slide1= ref(0);
       const slide= ref(0);
+      const text = ref('');
 
 
       const $q = useQuasar();
@@ -357,6 +363,15 @@ opacity: .5!important;
                 setYearlist(showYear.value);
 
       });  // complete onMounted
+
+          const newWord = (sword) =>{
+            todoList.push({
+                  id: Date.now(),
+                  title: sword,
+                  completed: false,
+                  });
+            text.value='';
+          }
 
           const historymeaning = (sword) => {
                 synonymList.value=[''];
@@ -1013,6 +1028,7 @@ opacity: .5!important;
               gameOver,
               answerQuiz,
               random_item,
+              newWord,
               // get_random_word,
               showOr,
               storeOr,
@@ -1020,6 +1036,7 @@ opacity: .5!important;
               slide1,
               isFullscreen,
               isDisplay,
+              text,
             }
           }
     }
