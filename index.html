@@ -287,6 +287,8 @@ opacity: .5!important;
       const meaningList = reactive([]);
       const meaningameList =reactive([]);
       const answeris= ref('');
+      const answerExample = ref('');
+      const answerAudio = ref('');
       const quiztxt= ref('');
       const showDate = ref('');
       const showYear = ref();
@@ -433,6 +435,10 @@ opacity: .5!important;
                       }
                       if (key == "definition")
                         definitionR=rectangle[key];
+                      if (key == "example")
+                        answerExample.value= rectangle[key];
+                      if (key== "phoneticaudio")
+                        answerAudio.value = rectangle[key];   
                     }
                     quiztxt.value=definitionR;
                     return definitionR;
@@ -449,9 +455,17 @@ opacity: .5!important;
                 const gameMatch = (answerWord) => {
                  if (answerWord == answeris.value){ 
                  $q.notify({
-                  message: 'Bingo',
+                  message: 'Bingo' ,
                   icon: 'thumb_up_off_alt'
                  })
+                 console.log(answerExample.value);
+                 if ( answerExample.value != null )
+                 $q.notify({
+                  message: answerExample.value ,
+                  icon: 'refresh'
+                 })
+                 playSound(answerAudio.value);
+
                 }
 
                  else 
@@ -497,6 +511,7 @@ opacity: .5!important;
                                   word : sword,
                                   definition: childArray[j].meanings[k].definitions[m].definition,
                                   example: childArray[j].meanings[k].definitions[m].example,
+                                  phoneticaudio: "https:"+response.data[0].phonetics[0].audio,
                                   });
                             n++;
                               }; // end the third
@@ -643,13 +658,14 @@ opacity: .5!important;
             d.setTime(Date.now());
             // 建立以前的單字資料
             // d.setFullYear(2020, 11, 9);
+            // 不用問
             // var n = d.getTime();          
-                $q.dialog({
-                  title: 'Confirm',
-                  message: 'Do you save : '+ strData + '?',
-                  cancel: true,
-                  persistent: true
-                }).onOk(() => {
+                // $q.dialog({
+                //   title: 'Confirm',
+                //   message: 'Do you save : '+ strData + '?',
+                //   cancel: true,
+                //   persistent: true
+                // }).onOk(() => {
                   rememberofYear.value++;
                   rememberofToday.value++;
                   rememberofMonth.value++;
@@ -694,13 +710,13 @@ opacity: .5!important;
                   // store here, change to store by id
                   localStorage.setItem('newword', objData);
 
-                }).onCancel(() => {
-                  $q.notify({
-                  message: '放棄 '+ strData+' 儲存',
-                  icon: 'gavel'
-                })
+                // }).onCancel(() => {
+                //   $q.notify({
+                //   message: '放棄 '+ strData+' 儲存',
+                //   icon: 'gavel'
+                // })
 
-                });
+                // });
               };
           // 讀取 LocalStorage的曾經背過的單字
           const getRememberWord = () => { 
@@ -959,6 +975,8 @@ opacity: .5!important;
               meaningList,
               meaningameList,
               answeris,
+              answerExample,
+              answerAudio,
               quiztxt,
               partofSpeech,
               synonymList,
