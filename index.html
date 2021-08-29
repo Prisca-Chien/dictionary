@@ -156,20 +156,26 @@ opacity: .5!important;
     <div class="my-card" :style="{display:isDisplay}" flat bordered>
       <q-card   >
           <q-card-section class="text-h6" vertical >
+
+            <q-btn flat round color="green" icon="exit_to_app" @click="gameOver()"></q-btn>
+            <q-btn flat round color="green" icon="quiz" @click="random_item()"></q-btn>
+            <q-btn flat round color="green" icon="question_answer" @click="answerQuiz()"></q-btn>
+
+            <q-separator></q-separator>
+
+            <q-item>
+                {{ quiztxt }}
+            </q-item>
+
+            <q-separator></q-separator>
+
             <q-item clickable v-ripple v-for="(word,index) in showList" :key="index">
               <q-item-section @click="gameMatch(word.title)" >
                 {{ word.title }}
               </q-item-section>
             </q-item>
-            <q-separator></q-separator>
-            <q-item>
-                {{ quiztxt }}
-            </q-item>
-            <q-separator></q-separator>
-              <q-btn flat round color="green" icon="exit_to_app" @click="gameOver()"></q-btn>
-              <q-btn flat round color="green" icon="quiz" @click="random_item()"></q-btn>
-              <q-btn flat round color="green" icon="question_answer" @click="answerQuiz()"></q-btn>
-          </q-card-section>   
+
+            </q-card-section>   
         </q-card>
       </div>  
 
