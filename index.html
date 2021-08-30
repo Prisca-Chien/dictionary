@@ -856,10 +856,18 @@ opacity: .5!important;
                   return wordlist.title === title; 
                 }
                 history.splice(index, 1);
-                let objData = JSON.stringify(history);
-                  // store here, change to store by id
-                localStorage.setItem('newword', objData);
-            };
+
+            const index1 = showList.findIndex(checkshow)
+            function checkshow(wordlist) {
+                  return wordlist.title === title; 
+                }
+                showList.splice(index1, 1);
+
+            let objData = JSON.stringify(history);
+              // store here, change to store by id
+            localStorage.setItem('newword', objData);
+          };
+
             const removeTodo = (cid) => {
             const index = todoList.findIndex(checkid)
 
