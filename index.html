@@ -194,6 +194,7 @@ opacity: .5!important;
                 <q-item-section @click="historymeaning(word.title)" >
                   {{ word.title }}
                 </q-item-section>
+                <q-btn :style="{display:isDisplay}" flat round color="orange" icon="delete_forever" @click="removeHistory(word.title)"></q-btn>
               </q-item>
             </q-card-section>
      </q-card-section>
