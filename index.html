@@ -692,11 +692,11 @@ opacity: .5!important;
                     }
                     
             var d = new Date();
-            d.setTime(Date.now());
+            // d.setTime(Date.now());
             // 建立以前的單字資料
-            // d.setFullYear(2020, 11, 9);
+            d.setFullYear(2021, 7, 30);
+            var n = d.getTime();          
             // 不用問
-            // var n = d.getTime();          
                 // $q.dialog({
                 //   title: 'Confirm',
                 //   message: 'Do you save : '+ strData + '?',
@@ -708,8 +708,8 @@ opacity: .5!important;
                   rememberofMonth.value++;
                   history.push({
                     // 建立以前的單字
-                    // id: n,
-                    id: Date.now(),
+                    id: n,
+                    // id: Date.now(),
                     title: strData,
                   });
                   showList.push({
