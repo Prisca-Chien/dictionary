@@ -361,6 +361,10 @@ opacity: .5!important;
                   checkYear(obj);
                 })
 
+                monthList.sort(function(a,b){
+                return (a.year*12+a.month) > (b.year*12+b.month) ? 1 : -1;
+                });
+
                 setYearlist(showYear.value);
 
       });  // complete onMounted
@@ -813,6 +817,7 @@ opacity: .5!important;
                   number: obj.number,
                  });
             })
+            slide1.value=monthfilterList.length-1;
           }  
 
             const setShowlist = (year,month,day) => { 
@@ -936,8 +941,10 @@ opacity: .5!important;
                   number: obj.number,
                   });
               } 
-          }
 
+
+              }
+          
           const checkYear = (obj) => {
               let BreakException = {};
               var finditem=false;
